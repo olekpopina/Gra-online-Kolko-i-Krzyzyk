@@ -10,6 +10,7 @@ import java.net.*;
 public class Main extends JFrame implements ActionListener {
     private JButton[][] przyciski = new JButton[3][3];
     private boolean turaGraczaX = true;
+    private boolean turaGraczaO = false;
     private int liczbaRuchow = 0;
     private boolean mojaTura;
     private Socket socket;
@@ -22,7 +23,6 @@ public class Main extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(3, 3));
 
-
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 przyciski[i][j] = new JButton("");
@@ -33,15 +33,14 @@ public class Main extends JFrame implements ActionListener {
             }
         }
 
-
         try {
             if (typ.equals("Serwer")) {
                 ServerSocket serverSocket = new ServerSocket(5000);
                 socket = serverSocket.accept();
-                mojaTura = true;
+                mojaTura = true;  // Serwer zaczyna
             } else {
                 socket = new Socket(ip, 5000);
-                mojaTura = false;
+                mojaTura = false; // Klient czeka na ruch serwera
             }
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
@@ -59,8 +58,18 @@ public class Main extends JFrame implements ActionListener {
             return;
         }
 
-        kliknietyPrzycisk.setText(turaGraczaX ? "X" : "O");
-        mojaTura = false;
+        // Zależnie od tury ustaw odpowiedni symbol
+        if (turaGraczaX) {
+            kliknietyPrzycisk.setText("X");
+            turaGraczaX = false;  // Zakończenie tury X
+            turaGraczaO = true;   // Teraz tura O
+        } else if (turaGraczaO) {
+            kliknietyPrzycisk.setText("O");
+            turaGraczaO = false;  // Zakończenie tury O
+            turaGraczaX = true;   // Teraz ponownie tura X
+        }
+
+        mojaTura = false;  // Czeka na ruch przeciwnika
         liczbaRuchow++;
 
         int x = -1, y = -1;
@@ -72,19 +81,16 @@ public class Main extends JFrame implements ActionListener {
                 }
             }
         }
-        out.println(x + "," + y);
-
+        out.println(x + "," + y);  // Wysłanie ruchu do przeciwnika
 
         if (czyKtosWygral()) {
-            String zwyciezca = turaGraczaX ? "X" : "O";
+            String zwyciezca = kliknietyPrzycisk.getText();
             JOptionPane.showMessageDialog(this, "Wygrywa: " + zwyciezca);
             resetGry();
         } else if (liczbaRuchow == 9) {
             JOptionPane.showMessageDialog(this, "Remis!");
             resetGry();
         }
-
-        turaGraczaX = !turaGraczaX;
     }
 
     private void nasluchujRuchy() {
@@ -95,20 +101,28 @@ public class Main extends JFrame implements ActionListener {
                 int x = Integer.parseInt(ruch[0]);
                 int y = Integer.parseInt(ruch[1]);
 
-                przyciski[x][y].setText(turaGraczaX ? "O" : "X");
-                mojaTura = true;
+                // Ustaw odpowiedni symbol na podstawie obecnej tury
+                if (turaGraczaX) {
+                    przyciski[x][y].setText("X");
+                    turaGraczaX = false;
+                    turaGraczaO = true;
+                } else if (turaGraczaO) {
+                    przyciski[x][y].setText("O");
+                    turaGraczaO = false;
+                    turaGraczaX = true;
+                }
+
+                mojaTura = true;  // Przełącz na swoją turę
                 liczbaRuchow++;
 
                 if (czyKtosWygral()) {
-                    String zwyciezca = turaGraczaX ? "O" : "X";
+                    String zwyciezca = przyciski[x][y].getText();
                     JOptionPane.showMessageDialog(this, "Wygrywa: " + zwyciezca);
                     resetGry();
                 } else if (liczbaRuchow == 9) {
                     JOptionPane.showMessageDialog(this, "Remis!");
                     resetGry();
                 }
-
-                turaGraczaX = !turaGraczaX;  // Zmiana tury
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -148,7 +162,9 @@ public class Main extends JFrame implements ActionListener {
             }
         }
         turaGraczaX = true;
+        turaGraczaO = false;
         liczbaRuchow = 0;
+        mojaTura = true;  // Resetowanie tury
     }
 
     public static void main(String[] args) {
@@ -161,5 +177,3 @@ public class Main extends JFrame implements ActionListener {
         });
     }
 }
-
-
