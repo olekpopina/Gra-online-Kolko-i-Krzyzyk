@@ -60,6 +60,7 @@ public class Main extends JFrame implements ActionListener {
 
         // Ustawienie panelu tła
         BackgroundPanel backgroundPanel = new BackgroundPanel("D:\\Gra-online-kolko-krzyzyk\\tlo.png");
+
         backgroundPanel.setLayout(new GridLayout(3, 3));
 
 
@@ -97,7 +98,7 @@ public class Main extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
-
+/*
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton kliknietyPrzycisk = (JButton) e.getSource();
@@ -139,6 +140,55 @@ public class Main extends JFrame implements ActionListener {
             resetGry();
         }
     }
+*/
+@Override
+public void actionPerformed(ActionEvent e) {
+    JButton kliknietyPrzycisk = (JButton) e.getSource();
+
+    if (!mojaTura || kliknietyPrzycisk.getIcon() != null) {
+        return;
+    }
+
+    Image scaledImage;
+    if (turaGraczaX) {
+        // Skalowanie obrazka X do rozmiarów przycisku
+        scaledImage = obrazekX.getScaledInstance(kliknietyPrzycisk.getWidth(), kliknietyPrzycisk.getHeight(), Image.SCALE_SMOOTH);
+        kliknietyPrzycisk.setIcon(new ImageIcon(scaledImage));
+        turaGraczaX = false;
+        turaGraczaO = true;
+    } else if (turaGraczaO) {
+        // Skalowanie obrazka O do rozmiarów przycisku
+        scaledImage = obrazekO.getScaledInstance(kliknietyPrzycisk.getWidth(), kliknietyPrzycisk.getHeight(), Image.SCALE_SMOOTH);
+        kliknietyPrzycisk.setIcon(new ImageIcon(scaledImage));
+        turaGraczaO = false;
+        turaGraczaX = true;
+    }
+
+    mojaTura = false;
+    liczbaRuchow++;
+
+    int x = -1, y = -1;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (przyciski[i][j] == kliknietyPrzycisk) {
+                x = i;
+                y = j;
+            }
+        }
+    }
+    out.println(x + "," + y);
+
+    if (czyKtosWygral()) {
+        String zwyciezca = kliknietyPrzycisk.getText();
+        JOptionPane.showMessageDialog(this, "Wygrywa: " + zwyciezca);
+        resetGry();
+    } else if (liczbaRuchow == 9) {
+        JOptionPane.showMessageDialog(this, "Remis!");
+        resetGry();
+    }
+}
+
+
 
     private void nasluchujRuchy() {
         try {
@@ -153,7 +203,7 @@ public class Main extends JFrame implements ActionListener {
                     turaGraczaX = false;
                     turaGraczaO = true;
                 } else if (turaGraczaO) {
-                    przyciski[x][y].setIcon(new ImageIcon(obrazekX));
+                    przyciski[x][y].setIcon(new ImageIcon(obrazekO));
                     turaGraczaO = false;
                     turaGraczaX = true;
                 }
@@ -204,7 +254,7 @@ public class Main extends JFrame implements ActionListener {
     private void resetGry() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                przyciski[i][j].setText("");
+                przyciski[i][j].setIcon(null);
             }
         }
         turaGraczaX = true;
@@ -212,14 +262,56 @@ public class Main extends JFrame implements ActionListener {
         liczbaRuchow = 0;
         mojaTura = true;
     }
+public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -> {
+        JFrame wyborOkna = new JFrame("Wybierz tryb");
+        wyborOkna.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        wyborOkna.setSize(300, 150);
+        wyborOkna.setLayout(new GridLayout(3, 1));
 
-    public static void main(String[] args) {
-        String typ = JOptionPane.showInputDialog("Wpisz 'Serwer' aby hostować lub 'Klient' aby się połączyć:");
-        String ip = typ.equals("Klient") ? JOptionPane.showInputDialog("Podaj adres IP serwera:") : "localhost";
+        JLabel label = new JLabel("Wybierz, czy chcesz być serwerem czy klientem:", SwingConstants.CENTER);
+        wyborOkna.add(label);
 
-        SwingUtilities.invokeLater(() -> {
-            Main gra = new Main(typ, ip);
-            gra.setVisible(true);
+        JButton serwerButton = new JButton("Serwer");
+        JButton klientButton = new JButton("Klient");
+
+        serwerButton.addActionListener(e -> {
+            wyborOkna.dispose(); // Zamknięcie okna wyboru
+            SwingUtilities.invokeLater(() -> {
+                Main gra = new Main("Serwer", "localhost");
+                gra.setVisible(true);
+            });
         });
-    }
+
+        klientButton.addActionListener(e -> {
+            wyborOkna.dispose(); // Zamknięcie okna wyboru
+            JFrame ipOkno = new JFrame("Podaj adres IP");
+            ipOkno.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            ipOkno.setSize(300, 150);
+            ipOkno.setLayout(new BorderLayout());
+
+            JLabel ipLabel = new JLabel("Podaj adres IP serwera:");
+            JTextField ipField = new JTextField("192.168.0.16"); // Domyślne IP
+
+            JButton polaczButton = new JButton("Połącz");
+            polaczButton.addActionListener(ev -> {
+                ipOkno.dispose(); // Zamknięcie okna z adresem IP
+                String ip = ipField.getText();
+                SwingUtilities.invokeLater(() -> {
+                    Main gra = new Main("Klient", ip);
+                    gra.setVisible(true);
+                });
+            });
+
+            ipOkno.add(ipLabel, BorderLayout.NORTH);
+            ipOkno.add(ipField, BorderLayout.CENTER);
+            ipOkno.add(polaczButton, BorderLayout.SOUTH);
+            ipOkno.setVisible(true);
+        });
+
+        wyborOkna.add(serwerButton);
+        wyborOkna.add(klientButton);
+        wyborOkna.setVisible(true);
+    });
+}
 }
