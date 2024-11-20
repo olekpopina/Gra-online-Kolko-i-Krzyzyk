@@ -21,7 +21,6 @@ public class Main extends JFrame implements ActionListener {
     private BufferedImage obrazekX;
     private BufferedImage obrazekO;
 
-    // Panel tła
     private class BackgroundPanel extends JPanel {
         private BufferedImage backgroundImage;
 
@@ -58,19 +57,32 @@ public class Main extends JFrame implements ActionListener {
             e.printStackTrace();
         }
 
-        // Ustawienie panelu tła
         BackgroundPanel backgroundPanel = new BackgroundPanel("D:\\Gra-online-kolko-krzyzyk\\tlo.png");
 
-        backgroundPanel.setLayout(new GridLayout(3, 3));
+        backgroundPanel.setLayout(null);
 
+        int gridSize = 3; // Liczba wierszy i kolumn w siatce
+        double scale = 0.6; // Współczynnik zmniejszenia przycisków (70%)
 
-        // Dodanie przycisków do gry
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        int width2 = 494;
+        int height2 = 456;
+        // Obliczanie szerokości i wysokości przycisków z uwzględnieniem współczynnika skali
+        int buttonWidth = (int) (width2 / gridSize * scale); // Szerokość przycisków po zmniejszeniu
+        int buttonHeight = (int) (height2 / gridSize * scale); // Wysokość przycisków po zmniejszeniu
+        int padding = 35; // Mały odstęp
+
+        int marginX = 120; // Margines od lewej krawędzi tła
+        int marginY = 120; // Margines od górnej krawędzi tła
+
+        // Dodanie przycisków do panelu z ręcznym ustawieniem rozmiarów
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
                 przyciski[i][j] = new JButton("");
-                przyciski[i][j].setFont(new Font("Arial", Font.BOLD, 60));
+                int x = marginX + j * (buttonWidth + padding); // Pozycja pozioma z uwzględnieniem marginesu i padding
+                int y = marginY + i * (buttonHeight + padding); // Pozycja pionowa z uwzględnieniem marginesu i padding
+                przyciski[i][j].setBounds(x, y, buttonWidth, buttonHeight); // Określenie pozycji i rozmiaru
                 przyciski[i][j].setFocusPainted(false);
-                przyciski[i][j].setOpaque(false);  // Przezroczyste tło przycisków
+                przyciski[i][j].setOpaque(false); // Przezroczyste tło przycisków
                 przyciski[i][j].setContentAreaFilled(false);
                 przyciski[i][j].setBorderPainted(false);
                 przyciski[i][j].addActionListener(this);
@@ -98,49 +110,7 @@ public class Main extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     }
-/*
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        JButton kliknietyPrzycisk = (JButton) e.getSource();
 
-        if (!mojaTura || kliknietyPrzycisk.getIcon() != null) {
-            return;
-        }
-
-        if (turaGraczaX) {
-            kliknietyPrzycisk.setIcon(new ImageIcon(obrazekX));
-            turaGraczaX = false;
-            turaGraczaO = true;
-        } else if (turaGraczaO) {
-            kliknietyPrzycisk.setIcon(new ImageIcon(obrazekO));
-            turaGraczaO = false;
-            turaGraczaX = true;
-        }
-
-        mojaTura = false;
-        liczbaRuchow++;
-
-        int x = -1, y = -1;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (przyciski[i][j] == kliknietyPrzycisk) {
-                    x = i;
-                    y = j;
-                }
-            }
-        }
-        out.println(x + "," + y);
-
-        if (czyKtosWygral()) {
-            String zwyciezca = kliknietyPrzycisk.getText();
-            JOptionPane.showMessageDialog(this, "Wygrywa: " + zwyciezca);
-            resetGry();
-        } else if (liczbaRuchow == 9) {
-            JOptionPane.showMessageDialog(this, "Remis!");
-            resetGry();
-        }
-    }
-*/
 @Override
 public void actionPerformed(ActionEvent e) {
     JButton kliknietyPrzycisk = (JButton) e.getSource();
@@ -149,16 +119,20 @@ public void actionPerformed(ActionEvent e) {
         return;
     }
 
+    // Pobranie wymiarów przycisku
+    int szerokosc = kliknietyPrzycisk.getWidth();
+    int wysokosc = kliknietyPrzycisk.getHeight();
+
     Image scaledImage;
     if (turaGraczaX) {
-        // Skalowanie obrazka X do rozmiarów przycisku
-        scaledImage = obrazekX.getScaledInstance(kliknietyPrzycisk.getWidth(), kliknietyPrzycisk.getHeight(), Image.SCALE_SMOOTH);
+        // Skalowanie obrazka X do aktualnych rozmiarów przycisku
+        scaledImage = obrazekX.getScaledInstance(szerokosc, wysokosc, Image.SCALE_SMOOTH);
         kliknietyPrzycisk.setIcon(new ImageIcon(scaledImage));
         turaGraczaX = false;
         turaGraczaO = true;
     } else if (turaGraczaO) {
-        // Skalowanie obrazka O do rozmiarów przycisku
-        scaledImage = obrazekO.getScaledInstance(kliknietyPrzycisk.getWidth(), kliknietyPrzycisk.getHeight(), Image.SCALE_SMOOTH);
+        // Skalowanie obrazka O do aktualnych rozmiarów przycisku
+        scaledImage = obrazekO.getScaledInstance(szerokosc, wysokosc, Image.SCALE_SMOOTH);
         kliknietyPrzycisk.setIcon(new ImageIcon(scaledImage));
         turaGraczaO = false;
         turaGraczaX = true;
@@ -167,6 +141,7 @@ public void actionPerformed(ActionEvent e) {
     mojaTura = false;
     liczbaRuchow++;
 
+    // Znajdź współrzędne klikniętego przycisku
     int x = -1, y = -1;
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -176,10 +151,13 @@ public void actionPerformed(ActionEvent e) {
             }
         }
     }
+
+    // Przesłanie ruchu do przeciwnika
     out.println(x + "," + y);
 
+    // Sprawdzenie, czy ktoś wygrał lub czy jest remis
     if (czyKtosWygral()) {
-        String zwyciezca = kliknietyPrzycisk.getText();
+        String zwyciezca = turaGraczaX ? "O" : "X"; // Odwrócona tura wskazuje zwycięzcę
         JOptionPane.showMessageDialog(this, "Wygrywa: " + zwyciezca);
         resetGry();
     } else if (liczbaRuchow == 9) {
@@ -187,7 +165,6 @@ public void actionPerformed(ActionEvent e) {
         resetGry();
     }
 }
-
 
 
     private void nasluchujRuchy() {
@@ -198,12 +175,20 @@ public void actionPerformed(ActionEvent e) {
                 int x = Integer.parseInt(ruch[0]);
                 int y = Integer.parseInt(ruch[1]);
 
+                // Pobranie wymiarów przycisku
+                int szerokosc = przyciski[x][y].getWidth();
+                int wysokosc = przyciski[x][y].getHeight();
+
+                // Skalowanie obrazu w zależności od tury
+                Image scaledImage;
                 if (turaGraczaX) {
-                    przyciski[x][y].setIcon(new ImageIcon(obrazekX));
+                    scaledImage = obrazekX.getScaledInstance(szerokosc, wysokosc, Image.SCALE_SMOOTH);
+                    przyciski[x][y].setIcon(new ImageIcon(scaledImage));
                     turaGraczaX = false;
                     turaGraczaO = true;
                 } else if (turaGraczaO) {
-                    przyciski[x][y].setIcon(new ImageIcon(obrazekO));
+                    scaledImage = obrazekO.getScaledInstance(szerokosc, wysokosc, Image.SCALE_SMOOTH);
+                    przyciski[x][y].setIcon(new ImageIcon(scaledImage));
                     turaGraczaO = false;
                     turaGraczaX = true;
                 }
@@ -211,8 +196,9 @@ public void actionPerformed(ActionEvent e) {
                 mojaTura = true;
                 liczbaRuchow++;
 
+                // Sprawdzenie, czy ktoś wygrał
                 if (czyKtosWygral()) {
-                    String zwyciezca = przyciski[x][y].getText();
+                    String zwyciezca = turaGraczaX ? "O" : "X";
                     JOptionPane.showMessageDialog(this, "Wygrywa: " + zwyciezca);
                     resetGry();
                 } else if (liczbaRuchow == 9) {
@@ -225,31 +211,34 @@ public void actionPerformed(ActionEvent e) {
         }
     }
 
-    private boolean czyKtosWygral() {
-        for (int i = 0; i < 3; i++) {
-            if (przyciski[i][0].getText().equals(przyciski[i][1].getText()) &&
-                    przyciski[i][1].getText().equals(przyciski[i][2].getText()) &&
-                    !przyciski[i][0].getText().equals("")) {
-                return true;
-            }
-            if (przyciski[0][i].getText().equals(przyciski[1][i].getText()) &&
-                    przyciski[1][i].getText().equals(przyciski[2][i].getText()) &&
-                    !przyciski[0][i].getText().equals("")) {
-                return true;
-            }
-        }
-        if (przyciski[0][0].getText().equals(przyciski[1][1].getText()) &&
-                przyciski[1][1].getText().equals(przyciski[2][2].getText()) &&
-                !przyciski[0][0].getText().equals("")) {
+private boolean czyKtosWygral() {
+    for (int i = 0; i < 3; i++) {
+        // Sprawdzamy wiersze
+        if (przyciski[i][0].getIcon() != null &&
+                przyciski[i][0].getIcon().equals(przyciski[i][1].getIcon()) &&
+                przyciski[i][1].getIcon().equals(przyciski[i][2].getIcon())) {
             return true;
         }
-        if (przyciski[0][2].getText().equals(przyciski[1][1].getText()) &&
-                przyciski[1][1].getText().equals(przyciski[2][0].getText()) &&
-                !przyciski[0][2].getText().equals("")) {
+        // Sprawdzamy kolumny
+        if (przyciski[0][i].getIcon() != null &&
+                przyciski[0][i].getIcon().equals(przyciski[1][i].getIcon()) &&
+                przyciski[1][i].getIcon().equals(przyciski[2][i].getIcon())) {
             return true;
         }
-        return false;
     }
+    // Sprawdzamy przekątne
+    if (przyciski[0][0].getIcon() != null &&
+            przyciski[0][0].getIcon().equals(przyciski[1][1].getIcon()) &&
+            przyciski[1][1].getIcon().equals(przyciski[2][2].getIcon())) {
+        return true;
+    }
+    if (przyciski[0][2].getIcon() != null &&
+            przyciski[0][2].getIcon().equals(przyciski[1][1].getIcon()) &&
+            przyciski[1][1].getIcon().equals(przyciski[2][0].getIcon())) {
+        return true;
+    }
+    return false;
+}
 
     private void resetGry() {
         for (int i = 0; i < 3; i++) {
@@ -267,7 +256,7 @@ public static void main(String[] args) {
         JFrame wyborOkna = new JFrame("Wybierz tryb");
         wyborOkna.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         wyborOkna.setSize(300, 150);
-        wyborOkna.setLayout(new GridLayout(3, 1));
+        wyborOkna.setLayout(new GridLayout(3, 1)); //3
 
         JLabel label = new JLabel("Wybierz, czy chcesz być serwerem czy klientem:", SwingConstants.CENTER);
         wyborOkna.add(label);
