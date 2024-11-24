@@ -19,6 +19,8 @@ public class Main extends JFrame implements ActionListener {
     private boolean turaGraczaX = true;
     private boolean mojaTura;
     private int liczbaRuchow = 0;
+    private final String[][] gameState = new String[3][3];
+
 
     private Socket socket;
     private BufferedReader in;
@@ -28,7 +30,8 @@ public class Main extends JFrame implements ActionListener {
     private final BufferedImage obrazekO = ResourceLoader.loadImage("/images/o.png");
 
     public Main(String typ, String ip) {
-        setTitle("Kółko i Krzyżyk - " + typ);
+        String playerSymbol = typ.equals("Serwer") ? "X" : "O";
+        setTitle("Kółko i Krzyżyk - " + typ + " (Gracz: " + playerSymbol + ")");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 600);
 
@@ -135,39 +138,41 @@ public class Main extends JFrame implements ActionListener {
         int buttonWidth = clickedButton.getWidth();
         int buttonHeight = clickedButton.getHeight();
 
+        String currentPlayer = turaGraczaX ? "X" : "O";
         ImageIcon icon = turaGraczaX
                 ? getScaledIcon(obrazekX, buttonWidth, buttonHeight)
                 : getScaledIcon(obrazekO, buttonWidth, buttonHeight);
 
         clickedButton.setIcon(icon);
 
-        mojaTura = false; // Завершення ходу
-        liczbaRuchow ++;
-
-        int x = -1, y = -1;
+        // Оновлюємо стан гри
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (przyciski[i][j] == clickedButton) {
-                    x = i;
-                    y = j;
+                    gameState[i][j] = currentPlayer;
+                    out.println(i + "," + j + "," + currentPlayer); // Передаємо координати та гравця
                 }
             }
         }
 
-        out.println(x + "," + y);
+        mojaTura = false;
+        liczbaRuchow++;
 
-        if (GameLogic.checkWin(przyciski)) {
-            JOptionPane.showMessageDialog(this, "Виграє: " + (turaGraczaX ? "X" : "O"));
-            SwingUtilities.invokeLater(() -> out.println("RESET"));
+        // Перевіряємо перемогу
+        if (GameLogic.checkWin(gameState)) {
+            JOptionPane.showMessageDialog(this, "Виграє: " + currentPlayer);
+            out.println("RESET");
             resetGame();
-        } else if (liczbaRuchow  == 9) {
+        } else if (liczbaRuchow == 9) {
             JOptionPane.showMessageDialog(this, "Нічия!");
-            SwingUtilities.invokeLater(() -> out.println("RESET"));
+            out.println("RESET");
             resetGame();
         }
 
         turaGraczaX = !turaGraczaX;
     }
+
+
 
 
 
@@ -176,66 +181,65 @@ public class Main extends JFrame implements ActionListener {
             String line;
             while ((line = in.readLine()) != null) {
                 if (line.equals("RESET")) {
-                    // Якщо отримано сигнал RESET, скидаємо гру
                     SwingUtilities.invokeLater(this::resetGame);
                     continue;
                 }
 
+                // Розбираємо хід іншого гравця
                 String[] move = line.split(",");
                 int x = Integer.parseInt(move[0]);
                 int y = Integer.parseInt(move[1]);
+                String player = move[2]; // Отримуємо гравця, який зробив хід (X або O)
+
+                gameState[x][y] = player;
 
                 JButton button = przyciski[x][y];
                 int buttonWidth = button.getWidth();
                 int buttonHeight = button.getHeight();
 
-                ImageIcon icon = turaGraczaX
+                ImageIcon icon = player.equals("X")
                         ? getScaledIcon(obrazekX, buttonWidth, buttonHeight)
                         : getScaledIcon(obrazekO, buttonWidth, buttonHeight);
 
-                button.setIcon(icon);
+                SwingUtilities.invokeLater(() -> button.setIcon(icon));
 
-                mojaTura = true;
-                liczbaRuchow++;
-
-                if (GameLogic.checkWin(przyciski)) {
-                    JOptionPane.showMessageDialog(this, "Wygryває: " + (turaGraczaX ? "X" : "O"));
-                    SwingUtilities.invokeLater(() -> out.println("RESET"));
-                    resetGame();
+                // Перевіряємо перемогу
+                if (GameLogic.checkWin(gameState)) {
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(this, "Виграє: " + player);
+                        out.println("RESET");
+                        resetGame();
+                    });
                 } else if (liczbaRuchow == 9) {
-                    JOptionPane.showMessageDialog(this, "Нічия!");
-                    SwingUtilities.invokeLater(() -> out.println("RESET"));
-                    resetGame();
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(this, "Нічия!");
+                        out.println("RESET");
+                        resetGame();
+                    });
                 }
 
-                turaGraczaX = !turaGraczaX;
+                mojaTura = true; // Інший гравець завершив хід
+                liczbaRuchow++;
+                turaGraczaX = player.equals("O"); // Наступний хід для протилежного гравця
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
+
     private void resetGame() {
-        // Очистка кнопок
-        for (JButton[] row : przyciski) {
-            for (JButton button : row) {
-                button.setIcon(null);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                przyciski[i][j].setIcon(null);
+                gameState[i][j] = null; // Очищуємо стан гри
             }
         }
 
-        // Зміна початкового гравця
         turaGraczaX = !turaGraczaX;
-
-        // Скидання черговості
         liczbaRuchow = 0;
-
-        // Встановлення черговості для обох сторін
         mojaTura = turaGraczaX;
-
-        // Оновлення стану GUI
-        SwingUtilities.invokeLater(() -> {
-            setEnabledButtons(true); // Увімкнути всі кнопки
-        });
     }
 
     private void setEnabledButtons(boolean enabled) {
@@ -263,8 +267,23 @@ public class Main extends JFrame implements ActionListener {
 
             klientButton.addActionListener(e -> {
                 wyborOkna.dispose();
-                String ip = JOptionPane.showInputDialog("Podaj adres IP serwera:");
-                new Main("Klient", ip);
+                JFrame ipFrame = new JFrame("Podaj IP serwera");
+                ipFrame.setSize(300, 150);
+                ipFrame.setLayout(new BorderLayout());
+
+                JTextField ipField = new JTextField("192.168.1.12"); // Автозаповнення IP
+                JButton connectButton = new JButton("Połącz");
+
+                connectButton.addActionListener(ev -> {
+                    ipFrame.dispose();
+                    String ip = ipField.getText();
+                    new Main("Klient", ip);
+                });
+
+                ipFrame.add(new JLabel("IP serwera:"), BorderLayout.NORTH);
+                ipFrame.add(ipField, BorderLayout.CENTER);
+                ipFrame.add(connectButton, BorderLayout.SOUTH);
+                ipFrame.setVisible(true);
             });
 
             wyborOkna.add(serwerButton);
