@@ -141,8 +141,8 @@ public class Main extends JFrame implements ActionListener {
 
         clickedButton.setIcon(icon);
 
-        mojaTura = false;
-        liczbaRuchow++;
+        mojaTura = false; // Завершення ходу
+        liczbaRuchow ++;
 
         int x = -1, y = -1;
         for (int i = 0; i < 3; i++) {
@@ -157,10 +157,12 @@ public class Main extends JFrame implements ActionListener {
         out.println(x + "," + y);
 
         if (GameLogic.checkWin(przyciski)) {
-            JOptionPane.showMessageDialog(this, "Wygrywa: " + (turaGraczaX ? "X" : "O"));
+            JOptionPane.showMessageDialog(this, "Виграє: " + (turaGraczaX ? "X" : "O"));
+            SwingUtilities.invokeLater(() -> out.println("RESET"));
             resetGame();
-        } else if (liczbaRuchow == 9) {
-            JOptionPane.showMessageDialog(this, "Remis!");
+        } else if (liczbaRuchow  == 9) {
+            JOptionPane.showMessageDialog(this, "Нічия!");
+            SwingUtilities.invokeLater(() -> out.println("RESET"));
             resetGame();
         }
 
@@ -168,10 +170,17 @@ public class Main extends JFrame implements ActionListener {
     }
 
 
+
     private void listenForMoves() {
         try {
             String line;
             while ((line = in.readLine()) != null) {
+                if (line.equals("RESET")) {
+                    // Якщо отримано сигнал RESET, скидаємо гру
+                    SwingUtilities.invokeLater(this::resetGame);
+                    continue;
+                }
+
                 String[] move = line.split(",");
                 int x = Integer.parseInt(move[0]);
                 int y = Integer.parseInt(move[1]);
@@ -190,10 +199,12 @@ public class Main extends JFrame implements ActionListener {
                 liczbaRuchow++;
 
                 if (GameLogic.checkWin(przyciski)) {
-                    JOptionPane.showMessageDialog(this, "Wygrywa: " + (turaGraczaX ? "X" : "O"));
+                    JOptionPane.showMessageDialog(this, "Wygryває: " + (turaGraczaX ? "X" : "O"));
+                    SwingUtilities.invokeLater(() -> out.println("RESET"));
                     resetGame();
                 } else if (liczbaRuchow == 9) {
-                    JOptionPane.showMessageDialog(this, "Remis!");
+                    JOptionPane.showMessageDialog(this, "Нічия!");
+                    SwingUtilities.invokeLater(() -> out.println("RESET"));
                     resetGame();
                 }
 
@@ -204,17 +215,35 @@ public class Main extends JFrame implements ActionListener {
         }
     }
 
-
     private void resetGame() {
+        // Очистка кнопок
         for (JButton[] row : przyciski) {
             for (JButton button : row) {
                 button.setIcon(null);
             }
         }
-        turaGraczaX = true;
+
+        // Зміна початкового гравця
+        turaGraczaX = !turaGraczaX;
+
+        // Скидання черговості
         liczbaRuchow = 0;
-        mojaTura = true;
-        updateButtonSizes(); // Скидаємо розміри кнопок
+
+        // Встановлення черговості для обох сторін
+        mojaTura = turaGraczaX;
+
+        // Оновлення стану GUI
+        SwingUtilities.invokeLater(() -> {
+            setEnabledButtons(true); // Увімкнути всі кнопки
+        });
+    }
+
+    private void setEnabledButtons(boolean enabled) {
+        for (JButton[] row : przyciski) {
+            for (JButton button : row) {
+                button.setEnabled(enabled);
+            }
+        }
     }
 
     public static void main(String[] args) {
