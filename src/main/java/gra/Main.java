@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,52 +33,78 @@ public class Main extends JFrame implements ActionListener {
         setSize(600, 600);
 
         BackgroundPanel backgroundPanel = new BackgroundPanel("/images/tlo.png");
-//        backgroundPanel.setLayout(new GridLayout(3, 3));
-//        add(backgroundPanel);
-//
-//        for (int i = 0; i < 3; i++) {
-//            for (int j = 0; j < 3; j++) {
-//                przyciski[i][j] = new JButton();
-//                przyciski[i][j].setFocusPainted(false);
-//                przyciski[i][j].addActionListener(this);
-//                backgroundPanel.add(przyciski[i][j]);
-//            }
-//        }
         backgroundPanel.setLayout(null);
-        Dimension dimension = getSize();
-        int gridSize = 3; // Liczba wierszy i kolumn w siatce
-        double scale = 288 / dimension.getWidth() * 1.25; // Współczynnik zmniejszenia przycisków (70%)
+        add(backgroundPanel);
 
-        double width2 = dimension.width * 0.6;
-        double height2 = dimension.height * 0.6;
-        // Obliczanie szerokości i wysokości przycisków z uwzględnieniem współczynnika skali
-        int buttonWidth = (int) (width2 / gridSize * scale); // Szerokość przycisków po zmniejszeniu
-        int buttonHeight = (int) (height2 / gridSize * scale); // Wysokość przycisków po zmniejszeniu
-        double padding = dimension.width * 0.1; // Mały odstęp
+        initializeButtons(backgroundPanel);
 
-        double marginX = dimension.width * 0.2; // Margines od lewej krawędzi tła
-        double marginY = dimension.height * 0.2; // Margines od górnej krawędzi tła
+        // Додаємо слухач для змін розміру вікна
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                updateButtonSizes();
+            }
+        });
 
-        // Dodanie przycisków do panelu z ręcznym ustawieniem rozmiarów
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
+        setNetworkConnection(typ, ip);
+        setVisible(true);
+    }
+
+    private void initializeButtons(BackgroundPanel backgroundPanel) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 przyciski[i][j] = new JButton("");
-                double x = marginX + j * (buttonWidth + padding); // Pozycja pozioma z uwzględnieniem marginesu i padding
-                double y = marginY + i * (buttonHeight + padding); // Pozycja pionowa z uwzględnieniem marginesu i padding
-                przyciski[i][j].setBounds((int) x, (int) y, buttonWidth, buttonHeight); // Określenie pozycji i rozmiaru
                 przyciski[i][j].setFocusPainted(false);
-                przyciski[i][j].setOpaque(false); // Przezroczyste tło przycisków
+                przyciski[i][j].setOpaque(false);
                 przyciski[i][j].setContentAreaFilled(false);
                 przyciski[i][j].setBorderPainted(false);
                 przyciski[i][j].addActionListener(this);
                 backgroundPanel.add(przyciski[i][j]);
             }
         }
-        // Dodanie panelu tła do okna
-        add(backgroundPanel);
+        updateButtonSizes(); // Встановлюємо початкові розміри
+    }
 
-        setNetworkConnection(typ, ip);
-        setVisible(true);
+    private ImageIcon getScaledIcon(BufferedImage image, int buttonWidth, int buttonHeight) {
+        int scaledWidth = (int) (buttonWidth * 0.7); // Однаковий коефіцієнт для всіх іконок
+        int scaledHeight = (int) (buttonHeight * 0.7);
+        Image scaledImage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImage);
+    }
+
+    private void updateButtonSizes() {
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+
+        int buttonWidth = panelWidth / 5; // Пропорційна ширина
+        int buttonHeight = panelHeight / 5; // Пропорційна висота
+
+        int startX = (panelWidth - buttonWidth * 3) / 2; // Центруємо по горизонталі
+        int startY = (panelHeight - buttonHeight * 3) / 2; // Центруємо по вертикалі
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int x = startX + j * buttonWidth;
+                int y = startY + i * buttonHeight;
+                przyciski[i][j].setBounds(x, y, buttonWidth, buttonHeight);
+
+                int finalI = i;
+                int finalJ = j;
+                SwingUtilities.invokeLater(() -> updateButtonIcon(przyciski[finalI][finalJ], buttonWidth, buttonHeight));
+            }
+        }
+    }
+
+
+    private void updateButtonIcon(JButton button, int width, int height) {
+        if (button.getIcon() instanceof ImageIcon) {
+            ImageIcon currentIcon = (ImageIcon) button.getIcon();
+            if (currentIcon.getImage() == obrazekX) {
+                button.setIcon(getScaledIcon(obrazekX, width, height));
+            } else if (currentIcon.getImage() == obrazekO) {
+                button.setIcon(getScaledIcon(obrazekO, width, height));
+            }
+        }
     }
 
     private void setNetworkConnection(String typ, String ip) {
@@ -104,10 +132,13 @@ public class Main extends JFrame implements ActionListener {
 
         if (!mojaTura || clickedButton.getIcon() != null) return;
 
-        ImageIcon icon = new ImageIcon(
-                turaGraczaX ? obrazekX.getScaledInstance(clickedButton.getWidth(), clickedButton.getHeight(), Image.SCALE_SMOOTH)
-                        : obrazekO.getScaledInstance(clickedButton.getWidth(), clickedButton.getHeight(), Image.SCALE_SMOOTH)
-        );
+        int buttonWidth = clickedButton.getWidth();
+        int buttonHeight = clickedButton.getHeight();
+
+        ImageIcon icon = turaGraczaX
+                ? getScaledIcon(obrazekX, buttonWidth, buttonHeight)
+                : getScaledIcon(obrazekO, buttonWidth, buttonHeight);
+
         clickedButton.setIcon(icon);
 
         mojaTura = false;
@@ -136,6 +167,7 @@ public class Main extends JFrame implements ActionListener {
         turaGraczaX = !turaGraczaX;
     }
 
+
     private void listenForMoves() {
         try {
             String line;
@@ -145,10 +177,13 @@ public class Main extends JFrame implements ActionListener {
                 int y = Integer.parseInt(move[1]);
 
                 JButton button = przyciski[x][y];
-                ImageIcon icon = new ImageIcon(
-                        turaGraczaX ? obrazekX.getScaledInstance(button.getWidth(), button.getHeight(), Image.SCALE_SMOOTH)
-                                : obrazekO.getScaledInstance(button.getWidth(), button.getHeight(), Image.SCALE_SMOOTH)
-                );
+                int buttonWidth = button.getWidth();
+                int buttonHeight = button.getHeight();
+
+                ImageIcon icon = turaGraczaX
+                        ? getScaledIcon(obrazekX, buttonWidth, buttonHeight)
+                        : getScaledIcon(obrazekO, buttonWidth, buttonHeight);
+
                 button.setIcon(icon);
 
                 mojaTura = true;
@@ -169,6 +204,7 @@ public class Main extends JFrame implements ActionListener {
         }
     }
 
+
     private void resetGame() {
         for (JButton[] row : przyciski) {
             for (JButton button : row) {
@@ -178,6 +214,7 @@ public class Main extends JFrame implements ActionListener {
         turaGraczaX = true;
         liczbaRuchow = 0;
         mojaTura = true;
+        updateButtonSizes(); // Скидаємо розміри кнопок
     }
 
     public static void main(String[] args) {
@@ -207,4 +244,3 @@ public class Main extends JFrame implements ActionListener {
         });
     }
 }
-
