@@ -124,7 +124,7 @@ public class Main extends JFrame implements ActionListener {
             out = new PrintWriter(socket.getOutputStream(), true);
             new Thread(this::listenForMoves).start();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Помилка мережевого з'єднання", "Помилка", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Błąd połączenia sieciowego", "Błąd", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
@@ -160,11 +160,11 @@ public class Main extends JFrame implements ActionListener {
 
         // Перевіряємо перемогу
         if (GameLogic.checkWin(gameState)) {
-            JOptionPane.showMessageDialog(this, "Виграє: " + currentPlayer);
+            JOptionPane.showMessageDialog(this, "Wygrywa: " + currentPlayer);
             out.println("RESET");
             resetGame();
         } else if (liczbaRuchow == 9) {
-            JOptionPane.showMessageDialog(this, "Нічия!");
+            JOptionPane.showMessageDialog(this, "Remis!");
             out.println("RESET");
             resetGame();
         }
@@ -206,13 +206,13 @@ public class Main extends JFrame implements ActionListener {
                 // Перевіряємо перемогу
                 if (GameLogic.checkWin(gameState)) {
                     SwingUtilities.invokeLater(() -> {
-                        JOptionPane.showMessageDialog(this, "Виграє: " + player);
+                        JOptionPane.showMessageDialog(this, "Wygrywa: " + player);
                         out.println("RESET");
                         resetGame();
                     });
                 } else if (liczbaRuchow == 9) {
                     SwingUtilities.invokeLater(() -> {
-                        JOptionPane.showMessageDialog(this, "Нічия!");
+                        JOptionPane.showMessageDialog(this, "Remis!");
                         out.println("RESET");
                         resetGame();
                     });
