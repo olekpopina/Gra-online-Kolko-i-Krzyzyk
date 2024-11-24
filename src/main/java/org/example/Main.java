@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 import javax.imageio.ImageIO;
+import java.util.Objects;
 
 public class Main extends JFrame implements ActionListener {
     private JButton[][] przyciski = new JButton[3][3];
@@ -51,13 +52,15 @@ public class Main extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         try {
-            obrazekX = ImageIO.read(new File("D:\\Gra-online-kolko-krzyzyk\\x.png"));
-            obrazekO = ImageIO.read(new File("D:\\Gra-online-kolko-krzyzyk\\o.png"));
+            obrazekX = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/images/x.png")));
+            obrazekO = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/images/o.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        BackgroundPanel backgroundPanel = new BackgroundPanel("D:\\Gra-online-kolko-krzyzyk\\tlo.png");
+        BackgroundPanel backgroundPanel = new BackgroundPanel(
+                Objects.requireNonNull(Main.class.getResource("/images/tlo.png")).getPath()
+        );
 
         backgroundPanel.setLayout(null);
 
