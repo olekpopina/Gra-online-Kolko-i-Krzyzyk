@@ -10,7 +10,7 @@ public class ResourceLoader {
         try {
             return ImageIO.read(Objects.requireNonNull(ResourceLoader.class.getResourceAsStream(path)));
         } catch (IOException e) {
-            throw new RuntimeException("Не вдалося завантажити зображення: " + path, e);
+            throw new RuntimeException("Nie udało się załadować obrazek: " + path, e);
         }
     }
 }

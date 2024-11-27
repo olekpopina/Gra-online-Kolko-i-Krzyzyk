@@ -41,7 +41,6 @@ public class Main extends JFrame implements ActionListener {
 
         initializeButtons(backgroundPanel);
 
-        // Додаємо слухач для змін розміру вікна
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -65,11 +64,11 @@ public class Main extends JFrame implements ActionListener {
                 backgroundPanel.add(przyciski[i][j]);
             }
         }
-        updateButtonSizes(); // Встановлюємо початкові розміри
+        updateButtonSizes();
     }
 
     private ImageIcon getScaledIcon(BufferedImage image, int buttonWidth, int buttonHeight) {
-        int scaledWidth = (int) (buttonWidth * 0.7); // Однаковий коефіцієнт для всіх іконок
+        int scaledWidth = (int) (buttonWidth * 0.7);
         int scaledHeight = (int) (buttonHeight * 0.7);
         Image scaledImage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
         return new ImageIcon(scaledImage);
@@ -79,11 +78,11 @@ public class Main extends JFrame implements ActionListener {
         int panelWidth = getWidth();
         int panelHeight = getHeight();
 
-        int buttonWidth = panelWidth / 5; // Пропорційна ширина
-        int buttonHeight = panelHeight / 5; // Пропорційна висота
+        int buttonWidth = panelWidth / 5;
+        int buttonHeight = panelHeight / 5;
 
-        int startX = (panelWidth - buttonWidth * 3) / 2; // Центруємо по горизонталі
-        int startY = (panelHeight - buttonHeight * 3) / 2; // Центруємо по вертикалі
+        int startX = (panelWidth - buttonWidth * 3) / 2;
+        int startY = (panelHeight - buttonHeight * 3) / 2;
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -145,12 +144,12 @@ public class Main extends JFrame implements ActionListener {
 
         clickedButton.setIcon(icon);
 
-        // Оновлюємо стан гри
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (przyciski[i][j] == clickedButton) {
                     gameState[i][j] = currentPlayer;
-                    out.println(i + "," + j + "," + currentPlayer); // Передаємо координати та гравця
+                    out.println(i + "," + j + "," + currentPlayer);
                 }
             }
         }
@@ -158,7 +157,6 @@ public class Main extends JFrame implements ActionListener {
         mojaTura = false;
         liczbaRuchow++;
 
-        // Перевіряємо перемогу
         if (GameLogic.checkWin(gameState)) {
             JOptionPane.showMessageDialog(this, "Wygrywa: " + currentPlayer);
             out.println("RESET");
@@ -185,11 +183,11 @@ public class Main extends JFrame implements ActionListener {
                     continue;
                 }
 
-                // Розбираємо хід іншого гравця
+
                 String[] move = line.split(",");
                 int x = Integer.parseInt(move[0]);
                 int y = Integer.parseInt(move[1]);
-                String player = move[2]; // Отримуємо гравця, який зробив хід (X або O)
+                String player = move[2];
 
                 gameState[x][y] = player;
 
@@ -203,7 +201,6 @@ public class Main extends JFrame implements ActionListener {
 
                 SwingUtilities.invokeLater(() -> button.setIcon(icon));
 
-                // Перевіряємо перемогу
                 if (GameLogic.checkWin(gameState)) {
                     SwingUtilities.invokeLater(() -> {
                         JOptionPane.showMessageDialog(this, "Wygrywa: " + player);
@@ -218,9 +215,9 @@ public class Main extends JFrame implements ActionListener {
                     });
                 }
 
-                mojaTura = true; // Інший гравець завершив хід
+                mojaTura = true;
                 liczbaRuchow++;
-                turaGraczaX = player.equals("O"); // Наступний хід для протилежного гравця
+                turaGraczaX = player.equals("O");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -233,7 +230,7 @@ public class Main extends JFrame implements ActionListener {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 przyciski[i][j].setIcon(null);
-                gameState[i][j] = null; // Очищуємо стан гри
+                gameState[i][j] = null;
             }
         }
 
