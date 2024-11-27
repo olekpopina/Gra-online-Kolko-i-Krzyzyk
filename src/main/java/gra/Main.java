@@ -271,7 +271,7 @@ public class Main extends JFrame implements ActionListener {
                 ipFrame.setSize(300, 150);
                 ipFrame.setLayout(new BorderLayout());
 
-                JTextField ipField = new JTextField("192.168.1.12"); // Автозаповнення IP
+                JTextField ipField = new JTextField("10.100.6.15");
                 JButton connectButton = new JButton("Połącz");
 
                 connectButton.addActionListener(ev -> {
