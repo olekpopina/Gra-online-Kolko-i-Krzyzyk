@@ -52,13 +52,14 @@ public abstract class GameBase extends JFrame implements GameMode {
                 buttons[i][j].setOpaque(false);
                 buttons[i][j].setContentAreaFilled(false);
                 buttons[i][j].setBorderPainted(false);
-                buttons[i][j].setEnabled(true);
-                buttons[i][j].setText("");
-                buttons[i][j].setIcon(null);
+                buttons[i][j].setEnabled(true); // Всі кнопки мають бути активними
+                buttons[i][j].setText("V"); // Початково кнопка порожня
+                buttons[i][j].setIcon(null); // Без значка
+                gameState[i][j] = null; // Ігровий стан клітинки пустий
 
                 int finalI = i;
                 int finalJ = j;
-                buttons[i][j].addActionListener(e -> makeMove(finalI, finalJ)); // Додаємо обробник
+                buttons[i][j].addActionListener(e -> makeMove(finalI, finalJ));
                 panel.add(buttons[i][j]);
             }
         }
@@ -70,10 +71,10 @@ public abstract class GameBase extends JFrame implements GameMode {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 String player = buttons[i][j].getText();
-                if (!player.isEmpty()) { // Оновлюємо значок тільки якщо кнопка має текст ("X" або "O")
+                if (!player.isEmpty()) { // Оновлюємо значок, якщо є текст
                     buttons[i][j].setIcon(getPlayerIcon(player));
                 } else {
-                    buttons[i][j].setIcon(null); // Якщо текст порожній, прибираємо значок
+                    buttons[i][j].setIcon(null); // Прибираємо значок, якщо текст порожній
                 }
             }
         }
@@ -92,8 +93,8 @@ public abstract class GameBase extends JFrame implements GameMode {
         BufferedImage image = "X".equals(player) ? obrazekX : obrazekO;
         if (image == null) return null;
 
-        int scaledWidth = (int) (buttonWidth * 0.8);
-        int scaledHeight = (int) (buttonHeight * 0.8);
+        int scaledWidth = (int) (buttonWidth * 0.8);  // 80% від ширини кнопки
+        int scaledHeight = (int) (buttonHeight * 0.8); // 80% від висоти кнопки
         Image scaledImage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
         return new ImageIcon(scaledImage);
     }
@@ -103,10 +104,10 @@ public abstract class GameBase extends JFrame implements GameMode {
     public void resetGame() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                buttons[i][j].setText("");
-                buttons[i][j].setIcon(null);
-                buttons[i][j].setEnabled(true);
-                gameState[i][j] = null;
+                buttons[i][j].setText("P"); // Очищаємо текст кнопок
+                buttons[i][j].setIcon(null); // Видаляємо значки
+                buttons[i][j].setEnabled(true); // Робимо кнопки активними
+                gameState[i][j] = null; // Скидаємо стан гри
             }
         }
     }
@@ -136,4 +137,14 @@ public abstract class GameBase extends JFrame implements GameMode {
     protected void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Błąd", JOptionPane.ERROR_MESSAGE);
     }
+
+    void printGameState() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(gameState[i][j] == null ? "." : gameState[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
 }
