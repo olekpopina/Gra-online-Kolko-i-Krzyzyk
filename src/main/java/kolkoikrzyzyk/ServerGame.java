@@ -27,15 +27,15 @@ public class ServerGame extends GameBase {
 
     @Override
     public void makeMove(int row, int col) {
-        if (gameState[row][col] != null || !isMyTurn) return; // Перевірка черги ходу
+        if (gameState[row][col] != null || !isMyTurn) return;
 
-        gameState[row][col] = "X"; // Сервер завжди "X"
+        gameState[row][col] = "X"; // Сервер грає за X
         buttons[row][col].setIcon(getPlayerIcon("X", buttons[row][col].getWidth()));
         buttons[row][col].setEnabled(false);
-        isMyTurn = false; // Завершуємо хід
+        isMyTurn = false;
 
-        out.println(row + "," + col + ",X"); // Відправляємо хід клієнту
-        checkGameStatus();
+        out.println(row + "," + col + ",X"); // Надсилаємо хід клієнту
+        checkAndSaveGameResult();
     }
 
     private void listenForMoves() {

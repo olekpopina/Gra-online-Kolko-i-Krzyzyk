@@ -11,6 +11,8 @@ public abstract class GameBase extends JFrame implements GameMode {
     protected final String[][] gameState = new String[3][3];
     protected BufferedImage obrazekX = ResourceLoader.loadImage("/images/x.png");
     protected BufferedImage obrazekO = ResourceLoader.loadImage("/images/o.png");
+    private String loggedInUser = null;
+    private String gameMode = "local"; // Можливо значення: "local", "vs_bot", "online"
 
     public GameBase(String title) {
         setTitle(title);
@@ -52,6 +54,14 @@ public abstract class GameBase extends JFrame implements GameMode {
                 setGridSize(gamePanel);
             }
         });
+    }
+
+    public void setLoggedInUser(String username) {
+        this.loggedInUser = username;
+    }
+
+    public void setGameMode(String mode) {
+        this.gameMode = mode;
     }
 
     private void initializeButtons(JPanel panel) {
@@ -118,22 +128,24 @@ public abstract class GameBase extends JFrame implements GameMode {
 
     @Override
     public void resetGame() {
+        if (loggedInUser != null) {
+            // Логіка для збереження результату в базу даних
+            boolean win = GameLogic.checkWin(gameState);
+            DatabaseManager.updateUserStats(loggedInUser, win, gameMode);
+        }
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                buttons[i][j].setText(""); // Очищаємо текст кнопок
-                buttons[i][j].setIcon(null); // Видаляємо значки
-                buttons[i][j].setEnabled(true); // Робимо кнопки активними
-//                int windowWidth = getWidth();
-//                int windowHeight = getHeight();
-//                int gridSize = Math.min(windowWidth, windowHeight) - 30;
-//                buttons[i][j].setPreferredSize(new Dimension(gridSize, gridSize)); // Фіксований розмір
-                gameState[i][j] = null; // Скидаємо стан гри
+                buttons[i][j].setText("");
+                buttons[i][j].setIcon(null);
+                buttons[i][j].setEnabled(true);
+                gameState[i][j] = null;
             }
         }
 
         SwingUtilities.invokeLater(() -> {
-            revalidate(); // Оновити компонування
-            repaint();    // Перемалювати інтерфейс
+            revalidate();
+            repaint();
         });
     }
 
@@ -152,8 +164,25 @@ public abstract class GameBase extends JFrame implements GameMode {
         return false;
     }
 
+    protected void checkAndSaveGameResult() {
+        String winner = getWinner(); // Локальне визначення переможця
+        boolean isDraw = isBoardFull() && winner == null;
 
-    private String getWinner() {
+        if (winner != null || isDraw) {
+            String message = isDraw ? "Remis!" : "Wygrywa gracz: " + winner;
+            JOptionPane.showMessageDialog(this, message);
+
+            if (loggedInUser != null) {
+                boolean win = loggedInUser.equals(winner); // Перевірка, чи залогований гравець виграв
+                DatabaseManager.updateUserStats(loggedInUser, win, gameMode);
+            }
+
+            resetGame();
+        }
+    }
+
+
+    protected String getWinner() {
         for (int i = 0; i < 3; i++) {
             // Перевірка рядків
             if (gameState[i][0] != null && gameState[i][0].equals(gameState[i][1]) && gameState[i][0].equals(gameState[i][2])) {

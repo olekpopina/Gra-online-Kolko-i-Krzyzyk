@@ -5,6 +5,9 @@ import java.awt.*;
 
 public class KolkoIKrzyzykMain {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(StartScreen::new);
+        SwingUtilities.invokeLater(() -> {
+            DatabaseManager.initializeDatabase(); // Створення бази
+            new StartScreen();
+        });
     }
 }

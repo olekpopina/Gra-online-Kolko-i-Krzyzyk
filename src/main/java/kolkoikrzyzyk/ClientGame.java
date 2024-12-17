@@ -27,15 +27,15 @@ public class ClientGame extends GameBase {
 
     @Override
     public void makeMove(int row, int col) {
-        if (gameState[row][col] != null || !isMyTurn) return; // Перевірка черги ходу
+        if (gameState[row][col] != null || !isMyTurn) return;
 
-        gameState[row][col] = "O"; // Клієнт завжди "O"
+        gameState[row][col] = "O"; // Клієнт грає за O
         buttons[row][col].setIcon(getPlayerIcon("O", buttons[row][col].getWidth()));
         buttons[row][col].setEnabled(false);
-        isMyTurn = false; // Завершуємо хід
+        isMyTurn = false;
 
         out.println(row + "," + col + ",O"); // Відправляємо хід серверу
-        checkGameStatus();
+        checkAndSaveGameResult();
     }
 
     private void listenForMoves() {

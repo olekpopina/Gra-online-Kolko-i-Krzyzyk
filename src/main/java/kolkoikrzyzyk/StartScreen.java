@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StartScreen extends JFrame {
+    private String loggedInUser = null;
     public StartScreen() {
         setTitle("Witamy w grze Kolko i Krzyzyk");
         setSize(600, 700);
@@ -56,86 +57,117 @@ public class StartScreen extends JFrame {
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Список найкращих гравців (хардкод)
-        List<String> topPlayers = Arrays.asList("1. GraczX - 10 pkt", "2. GraczO - 8 pkt", "3. GraczZ - 6 pkt");
+        // Отримуємо топ-10 гравців
+        List<String> topPlayers = DatabaseManager.getTopPlayers();
+
+        JPanel playerListPanel = new JPanel();
+        playerListPanel.setOpaque(false);
+        playerListPanel.setLayout(new BoxLayout(playerListPanel, BoxLayout.Y_AXIS));
+
         for (String player : topPlayers) {
             JLabel playerLabel = new JLabel(player);
             playerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
             playerLabel.setForeground(Color.YELLOW);
             playerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            panel.add(playerLabel);
+            playerListPanel.add(playerLabel);
         }
+
+        panel.add(Box.createVerticalStrut(10)); // Зменшений відступ
+        panel.add(titleLabel);
+        panel.add(Box.createVerticalStrut(5));  // Менший відступ перед списком
+        panel.add(playerListPanel);
+        panel.add(Box.createVerticalStrut(10)); // Зменшений відступ після списку
 
         return panel;
     }
+
+
 
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(5, 10, 5, 10); // Зменшені відступи між кнопками
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Перший рядок кнопок (2x3)
-        JButton localGameButton = createStyledButton("Gra na jednym komputerze");
-        JButton vsComputerButton = createStyledButton("Gra przeciw komputerowi");
-        JButton serverButton = createStyledButton("Gra jako serwer");
-        JButton clientButton = createStyledButton("Gra jako klient");
-
         gbc.gridx = 0;
+
+        // Кнопка "Локальна гра"
+        JButton localGameButton = createStyledButton("Gra na jednym komputerze");
         gbc.gridy = 0;
         panel.add(localGameButton, gbc);
-
-        gbc.gridx = 1;
-        panel.add(vsComputerButton, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(serverButton, gbc);
-
-        gbc.gridx = 1;
-        panel.add(clientButton, gbc);
-
-        // Широка кнопка для входу в акаунт
-        JButton loginButton = createStyledButton("Zaloguj się");
-        JButton logoutButton = createStyledButton("Wyloguj się");
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        panel.add(loginButton, gbc);
-
-        gbc.gridy = 3;
-        panel.add(logoutButton, gbc);
-
-        // Обробники подій
         localGameButton.addActionListener(e -> {
             dispose();
-            new LocalGame();
+            LocalGame game = new LocalGame();
+            game.setLoggedInUser(loggedInUser);
+            game.setGameMode("local");
         });
 
+        // Кнопка "Проти комп'ютера"
+        JButton vsComputerButton = createStyledButton("Gra przeciw komputerowi");
+        gbc.gridy = 1;
+        panel.add(vsComputerButton, gbc);
         vsComputerButton.addActionListener(e -> {
             dispose();
-            new VsComputerGame();
+            VsComputerGame game = new VsComputerGame();
+            game.setLoggedInUser(loggedInUser);
+            game.setGameMode("vs_bot");
         });
 
+        // Кнопка "Гра як сервер"
+        JButton serverButton = createStyledButton("Gra jako serwer");
+        gbc.gridy = 2;
+        panel.add(serverButton, gbc);
         serverButton.addActionListener(e -> {
             dispose();
-            new ServerGame();
+            ServerGame game = new ServerGame();
+            game.setLoggedInUser(loggedInUser);
+            game.setGameMode("online");
         });
 
+        // Кнопка "Гра як клієнт"
+        JButton clientButton = createStyledButton("Gra jako klient");
+        gbc.gridy = 3;
+        panel.add(clientButton, gbc);
         clientButton.addActionListener(e -> {
             dispose();
             String ip = JOptionPane.showInputDialog("Podaj IP serwera:");
-            new ClientGame(ip);
+            ClientGame game = new ClientGame(ip);
+            game.setLoggedInUser(loggedInUser);
+            game.setGameMode("online");
         });
 
-        loginButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Zalogowano!"));
-        logoutButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Wylogowano!"));
+        // Кнопка "Zaloguj się"
+        JButton loginButton = createStyledButton("Zaloguj się");
+        gbc.gridy = 4;
+        panel.add(loginButton, gbc);
+        loginButton.addActionListener(e -> {
+            String username = JOptionPane.showInputDialog(this, "Podaj nazwę użytkownika:");
+            String password = JOptionPane.showInputDialog(this, "Podaj hasło:");
+            if (DatabaseManager.authenticateUser(username, password)) {
+                loggedInUser = username;
+                JOptionPane.showMessageDialog(this, "Zalogowano jako: " + username);
+            } else {
+                JOptionPane.showMessageDialog(this, "Nieprawidłowy login lub hasło!", "Błąd", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        // Кнопка "Wyloguj się"
+        JButton logoutButton = createStyledButton("Wyloguj się");
+        gbc.gridy = 5;
+        panel.add(logoutButton, gbc);
+        logoutButton.addActionListener(e -> {
+            if (loggedInUser != null) {
+                JOptionPane.showMessageDialog(this, "Wylogowano użytkownika: " + loggedInUser);
+                loggedInUser = null;
+            } else {
+                JOptionPane.showMessageDialog(this, "Brak zalogowanego użytkownika!", "Błąd", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         return panel;
     }
+
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
@@ -147,4 +179,28 @@ public class StartScreen extends JFrame {
         button.setOpaque(true);
         return button;
     }
+
+    private void addLoginLogoutButtons(JPanel panel) {
+        JButton loginButton = createStyledButton("Zaloguj się");
+        JButton logoutButton = createStyledButton("Wyloguj się");
+
+        loginButton.addActionListener(e -> {
+            String username = JOptionPane.showInputDialog(this, "Podaj nazwę użytkownika:");
+            String password = JOptionPane.showInputDialog(this, "Podaj hasło:");
+
+            if (DatabaseManager.authenticateUser(username, password)) {
+                JOptionPane.showMessageDialog(this, "Zalogowano jako: " + username);
+                String stats = DatabaseManager.getPlayerStatistics(username);
+                JOptionPane.showMessageDialog(this, stats, "Twoje statystyki", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Nieprawidłowy login lub hasło!", "Błąd", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        logoutButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Wylogowano!"));
+
+        panel.add(loginButton);
+        panel.add(logoutButton);
+    }
+
 }
