@@ -17,7 +17,6 @@ public abstract class GameBase extends JFrame implements GameMode {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 600);
 
-
         BackgroundPanel backgroundPanel = new BackgroundPanel("/images/tlo.png");
         backgroundPanel.setLayout(new GridBagLayout());
         setContentPane(backgroundPanel);
@@ -25,14 +24,18 @@ public abstract class GameBase extends JFrame implements GameMode {
         JPanel gamePanel = new JPanel();
         gamePanel.setLayout(new GridLayout(3, 3, 0, 20));
         gamePanel.setOpaque(false);
-
         initializeButtons(gamePanel);
 
+        // Встановлення обмежень GridBagConstraints
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.anchor = GridBagConstraints.CENTER; // Панель по центру
+        gbc.insets = new Insets(100, 50, 50, 100); // Відступи навколо панелі
         backgroundPanel.add(gamePanel, gbc);
+
+        // Встановлення фіксованого розміру панелі
+        gamePanel.setPreferredSize(new Dimension(400, 400));
 
         setVisible(true);
 
@@ -53,7 +56,7 @@ public abstract class GameBase extends JFrame implements GameMode {
                 buttons[i][j].setContentAreaFilled(false);
                 buttons[i][j].setBorderPainted(false);
                 buttons[i][j].setEnabled(true); // Всі кнопки мають бути активними
-                buttons[i][j].setText("V"); // Початково кнопка порожня
+                buttons[i][j].setText(""); // Початково кнопка порожня
                 buttons[i][j].setIcon(null); // Без значка
                 gameState[i][j] = null; // Ігровий стан клітинки пустий
 
@@ -104,12 +107,18 @@ public abstract class GameBase extends JFrame implements GameMode {
     public void resetGame() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                buttons[i][j].setText("P"); // Очищаємо текст кнопок
+                buttons[i][j].setText(""); // Очищаємо текст кнопок
                 buttons[i][j].setIcon(null); // Видаляємо значки
                 buttons[i][j].setEnabled(true); // Робимо кнопки активними
+//                buttons[i][j].setPreferredSize(new Dimension(100, 100)); // Фіксований розмір
                 gameState[i][j] = null; // Скидаємо стан гри
             }
         }
+
+        SwingUtilities.invokeLater(() -> {
+            revalidate(); // Оновити компонування
+            repaint();    // Перемалювати інтерфейс
+        });
     }
 
     protected boolean checkGameStatus() {
