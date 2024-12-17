@@ -29,7 +29,8 @@ public class ClientGame extends GameBase {
         if (gameState[row][col] != null) return;
 
         gameState[row][col] = "O"; // Клієнт завжди "O"
-        buttons[row][col].setIcon(getPlayerIcon("O"));
+        int buttonSize = buttons[row][col].getWidth();
+        buttons[row][col].setIcon(getPlayerIcon("O", buttonSize));
         out.println(row + "," + col + ",O");
 
         checkGameStatus();
@@ -45,7 +46,8 @@ public class ClientGame extends GameBase {
                 String player = parts[2];
 
                 gameState[row][col] = player;
-                buttons[row][col].setIcon(getPlayerIcon(player));
+                int buttonSize = buttons[row][col].getWidth();
+                buttons[row][col].setIcon(getPlayerIcon(player, buttonSize));
 
                 checkGameStatus();
             }

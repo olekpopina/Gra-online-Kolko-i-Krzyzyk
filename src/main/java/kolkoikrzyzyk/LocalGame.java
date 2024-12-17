@@ -16,7 +16,9 @@ public class LocalGame extends GameBase {
         gameState[row][col] = currentPlayer;
 
         // Встановлюємо лише іконку
-        buttons[row][col].setIcon(getPlayerIcon(currentPlayer));
+        int buttonSize = buttons[row][col].getWidth();
+        buttons[row][col].setIcon(getPlayerIcon(currentPlayer, buttonSize));
+//        buttons[row][col].setIcon(getPlayerIcon(currentPlayer));
         buttons[row][col].setEnabled(false);
         buttons[row][col].setText(""); // Очищаємо текст
 

@@ -29,7 +29,8 @@ public class ServerGame extends GameBase {
         if (gameState[row][col] != null) return;
 
         gameState[row][col] = "X"; // Сервер завжди "X"
-        buttons[row][col].setIcon(getPlayerIcon("X"));
+        int buttonSize = buttons[row][col].getWidth();
+        buttons[row][col].setIcon(getPlayerIcon("X",buttonSize));
         out.println(row + "," + col + ",X");
 
         checkGameStatus();
@@ -45,7 +46,8 @@ public class ServerGame extends GameBase {
                 String player = parts[2];
 
                 gameState[row][col] = player;
-                buttons[row][col].setIcon(getPlayerIcon(player));
+                int buttonSize = buttons[row][col].getWidth();
+                buttons[row][col].setIcon(getPlayerIcon(player,buttonSize));
 
                 checkGameStatus();
             }

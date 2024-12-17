@@ -93,28 +93,27 @@ public abstract class GameBase extends JFrame implements GameMode {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 buttons[i][j].setPreferredSize(new Dimension(buttonSize, buttonSize));
+                String player = gameState[i][j];
+                if (player != null) {
+                    buttons[i][j].setIcon(getPlayerIcon(player, buttonSize)); // Оновлюємо іконку
+                }
             }
         }
     }
 
 
-    protected ImageIcon getPlayerIcon(String player) {
+
+    protected ImageIcon getPlayerIcon(String player, int buttonSize) {
         if (player == null || player.isEmpty()) return null;
-
-        int panelWidth = getWidth();
-        int panelHeight = getHeight();
-
-        int buttonWidth = panelWidth / 5;
-        int buttonHeight = panelHeight / 5;
 
         BufferedImage image = "X".equals(player) ? obrazekX : obrazekO;
         if (image == null) return null;
 
-        int scaledWidth = (int) (buttonWidth * 0.8);  // 80% від ширини кнопки
-        int scaledHeight = (int) (buttonHeight * 0.8); // 80% від висоти кнопки
-        Image scaledImage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+        int scaledSize = (int) (buttonSize * 0.8); // 80% від розміру кнопки
+        Image scaledImage = image.getScaledInstance(scaledSize, scaledSize, Image.SCALE_SMOOTH);
         return new ImageIcon(scaledImage);
     }
+
 
 
     @Override
