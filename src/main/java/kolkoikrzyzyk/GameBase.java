@@ -15,7 +15,11 @@ public abstract class GameBase extends JFrame implements GameMode {
     public GameBase(String title) {
         setTitle(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 600);
+
+        // Початковий розмір вікна
+        int windowSize = 600;
+        setSize(windowSize, windowSize);
+        setMinimumSize(new Dimension(400, 400)); // Мінімальний розмір вікна
 
         BackgroundPanel backgroundPanel = new BackgroundPanel("/images/tlo.png");
         backgroundPanel.setLayout(new GridBagLayout());
@@ -24,25 +28,28 @@ public abstract class GameBase extends JFrame implements GameMode {
         JPanel gamePanel = new JPanel();
         gamePanel.setLayout(new GridLayout(3, 3, 0, 20));
         gamePanel.setOpaque(false);
+
         initializeButtons(gamePanel);
 
-        // Встановлення обмежень GridBagConstraints
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER; // Панель по центру
-        gbc.insets = new Insets(100, 50, 50, 100); // Відступи навколо панелі
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(20, 20, 20, 20); // Відступи навколо сітки
         backgroundPanel.add(gamePanel, gbc);
 
-        // Встановлення фіксованого розміру панелі
-        gamePanel.setPreferredSize(new Dimension(400, 400));
+        // Встановлення стартового розміру сітки кнопок
+        int gridSize = (int) (windowSize * 0.65); // 65% від розміру вікна
+        gamePanel.setPreferredSize(new Dimension(gridSize, gridSize));
+        updateButtonSizes(gridSize / 3);
 
         setVisible(true);
 
+        // Додаємо слухача для динамічної зміни розміру
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                updateButtonSizes();
+                setGridSize(gamePanel);
             }
         });
     }
@@ -56,7 +63,7 @@ public abstract class GameBase extends JFrame implements GameMode {
                 buttons[i][j].setContentAreaFilled(false);
                 buttons[i][j].setBorderPainted(false);
                 buttons[i][j].setEnabled(true); // Всі кнопки мають бути активними
-                buttons[i][j].setText(""); // Початково кнопка порожня
+                buttons[i][j].setText(""); // Очищаємо текст кнопки
                 buttons[i][j].setIcon(null); // Без значка
                 gameState[i][j] = null; // Ігровий стан клітинки пустий
 
@@ -68,17 +75,24 @@ public abstract class GameBase extends JFrame implements GameMode {
         }
     }
 
+    private void setGridSize(JPanel gamePanel) {
+        int windowWidth = getWidth();
+        int windowHeight = getHeight();
+
+        // Обмежуємо розмір сітки (50% від поточного розміру вікна)
+        int gridSize = (int) (Math.min(windowWidth, windowHeight) * 0.65);
+        gamePanel.setPreferredSize(new Dimension(gridSize, gridSize));
+
+        updateButtonSizes(gridSize / 3);
+        revalidate();
+        repaint();
+    }
 
 
-    private void updateButtonSizes() {
+    private void updateButtonSizes(int buttonSize) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                String player = buttons[i][j].getText();
-                if (!player.isEmpty()) { // Оновлюємо значок, якщо є текст
-                    buttons[i][j].setIcon(getPlayerIcon(player));
-                } else {
-                    buttons[i][j].setIcon(null); // Прибираємо значок, якщо текст порожній
-                }
+                buttons[i][j].setPreferredSize(new Dimension(buttonSize, buttonSize));
             }
         }
     }
@@ -110,7 +124,10 @@ public abstract class GameBase extends JFrame implements GameMode {
                 buttons[i][j].setText(""); // Очищаємо текст кнопок
                 buttons[i][j].setIcon(null); // Видаляємо значки
                 buttons[i][j].setEnabled(true); // Робимо кнопки активними
-//                buttons[i][j].setPreferredSize(new Dimension(100, 100)); // Фіксований розмір
+//                int windowWidth = getWidth();
+//                int windowHeight = getHeight();
+//                int gridSize = Math.min(windowWidth, windowHeight) - 30;
+//                buttons[i][j].setPreferredSize(new Dimension(gridSize, gridSize)); // Фіксований розмір
                 gameState[i][j] = null; // Скидаємо стан гри
             }
         }
