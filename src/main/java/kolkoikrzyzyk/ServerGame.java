@@ -6,6 +6,7 @@ import java.net.*;
 public class ServerGame extends GameBase {
     private PrintWriter out;
     private BufferedReader in;
+    private boolean isMyTurn = true; // Сервер починає першим
 
     public ServerGame() {
         super("Gra jako serwer");
@@ -26,13 +27,14 @@ public class ServerGame extends GameBase {
 
     @Override
     public void makeMove(int row, int col) {
-        if (gameState[row][col] != null) return;
+        if (gameState[row][col] != null || !isMyTurn) return; // Перевірка черги ходу
 
         gameState[row][col] = "X"; // Сервер завжди "X"
-        int buttonSize = buttons[row][col].getWidth();
-        buttons[row][col].setIcon(getPlayerIcon("X",buttonSize));
-        out.println(row + "," + col + ",X");
+        buttons[row][col].setIcon(getPlayerIcon("X", buttons[row][col].getWidth()));
+        buttons[row][col].setEnabled(false);
+        isMyTurn = false; // Завершуємо хід
 
+        out.println(row + "," + col + ",X"); // Відправляємо хід клієнту
         checkGameStatus();
     }
 
@@ -46,9 +48,10 @@ public class ServerGame extends GameBase {
                 String player = parts[2];
 
                 gameState[row][col] = player;
-                int buttonSize = buttons[row][col].getWidth();
-                buttons[row][col].setIcon(getPlayerIcon(player,buttonSize));
+                buttons[row][col].setIcon(getPlayerIcon(player, buttons[row][col].getWidth()));
+                buttons[row][col].setEnabled(false);
 
+                isMyTurn = true; // Після отримання ходу, сервер знову може ходити
                 checkGameStatus();
             }
         } catch (IOException e) {

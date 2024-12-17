@@ -138,16 +138,40 @@ public abstract class GameBase extends JFrame implements GameMode {
     }
 
     protected boolean checkGameStatus() {
-        if (GameLogic.checkWin(gameState)) {
-            JOptionPane.showMessageDialog(this, "Wygrywa!");
+        String winner = getWinner(); // Отримуємо символ переможця
+
+        if (winner != null) { // Якщо є переможець
+            JOptionPane.showMessageDialog(this, "Wygrywa gracz: " + winner + "!", "Wynik gry", JOptionPane.INFORMATION_MESSAGE);
             resetGame();
             return true;
-        } else if (isBoardFull()) {
-            JOptionPane.showMessageDialog(this, "Remis!");
+        } else if (isBoardFull()) { // Нічия
+            JOptionPane.showMessageDialog(this, "Remis!", "Wynik gry", JOptionPane.INFORMATION_MESSAGE);
             resetGame();
             return true;
         }
         return false;
+    }
+
+
+    private String getWinner() {
+        for (int i = 0; i < 3; i++) {
+            // Перевірка рядків
+            if (gameState[i][0] != null && gameState[i][0].equals(gameState[i][1]) && gameState[i][0].equals(gameState[i][2])) {
+                return gameState[i][0];
+            }
+            // Перевірка стовпців
+            if (gameState[0][i] != null && gameState[0][i].equals(gameState[1][i]) && gameState[0][i].equals(gameState[2][i])) {
+                return gameState[0][i];
+            }
+        }
+        // Перевірка діагоналей
+        if (gameState[0][0] != null && gameState[0][0].equals(gameState[1][1]) && gameState[0][0].equals(gameState[2][2])) {
+            return gameState[0][0];
+        }
+        if (gameState[0][2] != null && gameState[0][2].equals(gameState[1][1]) && gameState[0][2].equals(gameState[2][0])) {
+            return gameState[0][2];
+        }
+        return null; // Немає переможця
     }
 
     private boolean isBoardFull() {
