@@ -17,8 +17,6 @@ public class ServerGame extends GameBase {
         super("Gra jako serwer");
         initializeWaitingScreen(); // Показуємо екран очікування
         startServer();             // Запускаємо сервер
-//        setGameMode("online");
-//        updateWindowTitle();
         setVisible(false);         // Вікно гри поки що приховане
     }
 
@@ -88,9 +86,21 @@ public class ServerGame extends GameBase {
 
     private String getLocalIPAddress() {
         try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            return "Nie udało się uzyskać IP";
+            for (NetworkInterface networkInterface : java.util.Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                if (networkInterface.isUp() && !networkInterface.isLoopback()) {
+                    for (InetAddress address : java.util.Collections.list(networkInterface.getInetAddresses())) {
+                        if (address instanceof Inet4Address && !address.isLoopbackAddress()) {
+                            String displayName = networkInterface.getDisplayName().toLowerCase();
+                            if (displayName.contains("wi-fi") || displayName.contains("wlan") || displayName.contains("wireless")) {
+                                return address.getHostAddress();
+                            }
+                        }
+                    }
+                }
+            }
+            return "Nie znaleziono IP dla Wi-Fi";
+        } catch (Exception e) {
+            return "Błąd przy uzyskiwaniu IP: " + e.getMessage();
         }
     }
 
