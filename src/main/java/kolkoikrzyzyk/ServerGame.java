@@ -17,6 +17,8 @@ public class ServerGame extends GameBase {
         super("Gra jako serwer");
         initializeWaitingScreen(); // Показуємо екран очікування
         startServer();             // Запускаємо сервер
+//        setGameMode("online");
+//        updateWindowTitle();
         setVisible(false);         // Вікно гри поки що приховане
     }
 

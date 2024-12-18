@@ -114,7 +114,9 @@ public class StartScreen extends JFrame {
         serverButton.addActionListener(e -> {
             dispose(); // Закриваємо головне меню
             ServerGame game = new ServerGame(); // Запускаємо сервер гри
+            game.setLoggedInUser(loggedInUser);
             game.setGameMode("online");
+            game.updateWindowTitle();
         });
 
 
