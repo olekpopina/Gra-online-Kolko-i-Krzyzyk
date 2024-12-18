@@ -111,6 +111,12 @@ public abstract class GameBase extends JFrame implements GameMode {
         }
     }
 
+    public void updateWindowTitle() {
+        if (loggedInUser != null) {
+            setTitle(getTitle() + " - Zalogowano jako: " + loggedInUser);
+        }
+    }
+
 
 
     protected ImageIcon getPlayerIcon(String player, int buttonSize) {

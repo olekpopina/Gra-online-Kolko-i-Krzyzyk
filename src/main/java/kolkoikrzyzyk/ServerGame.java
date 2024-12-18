@@ -1,5 +1,7 @@
 package kolkoikrzyzyk;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 
@@ -7,27 +9,83 @@ public class ServerGame extends GameBase {
     private PrintWriter out;
     private BufferedReader in;
     private boolean isMyTurn = true; // Сервер починає першим
+    private ServerSocket serverSocket;
+    private Socket clientSocket;
+    private JFrame waitingScreen;
 
     public ServerGame() {
         super("Gra jako serwer");
-        setupServer();
+        initializeWaitingScreen(); // Показуємо екран очікування
+        startServer();             // Запускаємо сервер
+        setVisible(false);         // Вікно гри поки що приховане
     }
 
-    private void setupServer() {
-        try (ServerSocket serverSocket = new ServerSocket(5000)) {
-            Socket socket = serverSocket.accept();
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    private void initializeWaitingScreen() {
+        // Створення вікна очікування
+        waitingScreen = new JFrame("Oczekiwanie na klienta...");
+        waitingScreen.setSize(400, 300);
+        waitingScreen.setLocationRelativeTo(null);
+        waitingScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-            new Thread(this::listenForMoves).start();
-        } catch (IOException e) {
-            showError("Błąd serwera: " + e.getMessage());
+        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/tlo.png");
+        backgroundPanel.setLayout(new BorderLayout());
+
+        JLabel waitingLabel = new JLabel("Oczekiwanie na klienta...");
+        waitingLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        waitingLabel.setForeground(Color.WHITE);
+        waitingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JLabel ipLabel = new JLabel("Twój adres IP: " + getLocalIPAddress());
+        ipLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        ipLabel.setForeground(Color.YELLOW);
+        ipLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        backgroundPanel.add(waitingLabel, BorderLayout.CENTER);
+        backgroundPanel.add(ipLabel, BorderLayout.SOUTH);
+
+        waitingScreen.setContentPane(backgroundPanel);
+        waitingScreen.setVisible(true);
+    }
+
+    private void startServer() {
+        new Thread(() -> {
+            try {
+                serverSocket = new ServerSocket(5000); // Створення сервера на порту 5000
+                System.out.println("Serwer uruchomiony. Oczekiwanie na klienta...");
+
+                clientSocket = serverSocket.accept(); // Чекаємо на підключення клієнта
+                System.out.println("Klient połączony: " + clientSocket.getInetAddress());
+
+                // Закриваємо вікно очікування
+                SwingUtilities.invokeLater(() -> waitingScreen.dispose());
+
+                // Ініціалізуємо потоки для обміну даними
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+                // Відображаємо вікно гри після підключення клієнта
+                SwingUtilities.invokeLater(() -> setVisible(true));
+
+                // Починаємо слухати хід клієнта
+                new Thread(this::listenForMoves).start();
+
+            } catch (IOException e) {
+                showError("Błąd serwera: " + e.getMessage());
+            }
+        }).start();
+    }
+
+    private String getLocalIPAddress() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            return "Nie udało się uzyskać IP";
         }
     }
 
     @Override
     public void makeMove(int row, int col) {
-        if (gameState[row][col] != null || !isMyTurn) return;
+        if (gameState[row][col] != null || !isMyTurn || out == null) return;
 
         gameState[row][col] = "X"; // Сервер грає за X
         buttons[row][col].setIcon(getPlayerIcon("X", buttons[row][col].getWidth()));
@@ -51,7 +109,7 @@ public class ServerGame extends GameBase {
                 buttons[row][col].setIcon(getPlayerIcon(player, buttons[row][col].getWidth()));
                 buttons[row][col].setEnabled(false);
 
-                isMyTurn = true; // Після отримання ходу, сервер знову може ходити
+                isMyTurn = true; // Після отримання ходу сервер знову може ходити
                 checkGameStatus();
             }
         } catch (IOException e) {
