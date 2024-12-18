@@ -21,7 +21,7 @@ public class StartScreen extends JFrame {
         setSize(600, 600);
         setLocationRelativeTo(null);
 
-        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/tlo.png");
+        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/StartScreen.jpg");
         backgroundPanel.setLayout(new BorderLayout());
         setContentPane(backgroundPanel);
 
@@ -35,7 +35,7 @@ public class StartScreen extends JFrame {
         userPanel.setOpaque(false);
         JLabel userLabel = new JLabel("Zalogowano jako: " + (loggedInUser != null ? loggedInUser : "Gość"));
         userLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        userLabel.setForeground(Color.WHITE);
+        userLabel.setForeground(Color.BLUE);
         userPanel.add(userLabel);
 
         // Топ-10 гравців

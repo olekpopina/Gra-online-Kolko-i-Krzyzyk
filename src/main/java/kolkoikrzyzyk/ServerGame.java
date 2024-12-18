@@ -23,29 +23,38 @@ public class ServerGame extends GameBase {
     private void initializeWaitingScreen() {
         // Створення вікна очікування
         waitingScreen = new JFrame("Oczekiwanie na klienta...");
-        waitingScreen.setSize(400, 300);
+        waitingScreen.setSize(600, 550);
         waitingScreen.setLocationRelativeTo(null);
         waitingScreen.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/tlo.png");
-        backgroundPanel.setLayout(new BorderLayout());
+        // Створення фону
+        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/tlo_oczekiwania.jpg");
+        backgroundPanel.setLayout(new BoxLayout(backgroundPanel, BoxLayout.Y_AXIS));
 
+        // Створення та налаштування мітки "Oczekiwanie na klienta"
         JLabel waitingLabel = new JLabel("Oczekiwanie na klienta...");
-        waitingLabel.setFont(new Font("Arial", Font.BOLD, 22));
-        waitingLabel.setForeground(Color.WHITE);
-        waitingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        waitingLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        waitingLabel.setForeground(Color.BLUE);
+        waitingLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Центрування по горизонталі
 
+        // Створення та налаштування мітки з IP-адресою
         JLabel ipLabel = new JLabel("Twój adres IP: " + getLocalIPAddress());
-        ipLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        ipLabel.setForeground(Color.YELLOW);
-        ipLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        ipLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        ipLabel.setForeground(Color.BLUE);
+        ipLabel.setAlignmentX(Component.CENTER_ALIGNMENT); // Центрування по горизонталі
 
-        backgroundPanel.add(waitingLabel, BorderLayout.CENTER);
-        backgroundPanel.add(ipLabel, BorderLayout.SOUTH);
+        // Додаємо мітки з відступами
+        backgroundPanel.add(Box.createVerticalGlue()); // Простір перед мітками
+        backgroundPanel.add(waitingLabel);
+        backgroundPanel.add(Box.createRigidArea(new Dimension(0, 30))); // Відступ між мітками
+        backgroundPanel.add(ipLabel);
+        backgroundPanel.add(Box.createVerticalGlue()); // Простір після міток
 
+        // Встановлюємо фон як вміст вікна
         waitingScreen.setContentPane(backgroundPanel);
         waitingScreen.setVisible(true);
     }
+
 
     private void startServer() {
         new Thread(() -> {
