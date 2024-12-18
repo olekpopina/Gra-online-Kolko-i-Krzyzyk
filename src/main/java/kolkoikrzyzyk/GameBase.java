@@ -178,10 +178,10 @@ public abstract class GameBase extends JFrame implements GameMode {
             String message = isDraw ? "Remis!" : "Wygrywa gracz: " + winner;
             JOptionPane.showMessageDialog(this, message);
 
-            if (loggedInUser != null) {
-                boolean win = loggedInUser.equals(winner); // Перевірка, чи залогований гравець виграв
-                DatabaseManager.updateUserStats(loggedInUser, win, gameMode);
-            }
+//            if (loggedInUser != null) {
+//                boolean win = loggedInUser.equals(winner); // Перевірка, чи залогований гравець виграв
+//                DatabaseManager.updateUserStats(loggedInUser, win, gameMode);
+//            }
 
             resetGame();
         }
