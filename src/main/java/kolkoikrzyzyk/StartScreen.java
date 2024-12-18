@@ -93,6 +93,7 @@ public class StartScreen extends JFrame {
             dispose();
             LocalGame game = new LocalGame();
             game.setLoggedInUser(loggedInUser);
+            game.setGameMode("local");
             game.updateWindowTitle();
         });
 
@@ -103,6 +104,7 @@ public class StartScreen extends JFrame {
             dispose();
             VsComputerGame game = new VsComputerGame();
             game.setLoggedInUser(loggedInUser);
+            game.setGameMode("vs_bot");
             game.updateWindowTitle();
         });
 
@@ -111,7 +113,8 @@ public class StartScreen extends JFrame {
         panel.add(serverButton, gbc);
         serverButton.addActionListener(e -> {
             dispose(); // Закриваємо головне меню
-            new ServerGame(); // Запускаємо сервер гри
+            ServerGame game = new ServerGame(); // Запускаємо сервер гри
+            game.setGameMode("online");
         });
 
 
@@ -125,6 +128,7 @@ public class StartScreen extends JFrame {
             dispose();
             ClientGame game = new ClientGame(ip);
             game.setLoggedInUser(loggedInUser);
+            game.setGameMode("online");
             game.updateWindowTitle();
         });
 
