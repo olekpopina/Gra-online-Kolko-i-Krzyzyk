@@ -3,6 +3,7 @@ package kolkoikrzyzyk;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 
@@ -12,6 +13,7 @@ public abstract class GameBase extends JFrame implements GameMode {
     protected BufferedImage obrazekX = ResourceLoader.loadImage("/images/x.png");
     protected BufferedImage obrazekO = ResourceLoader.loadImage("/images/o.png");
     private String loggedInUser = null;
+    protected String playerSymbol = "X";
     private String gameMode = "local"; // Можливо значення: "local", "vs_bot", "online"
 
     public GameBase(String title) {
@@ -45,6 +47,9 @@ public abstract class GameBase extends JFrame implements GameMode {
         gamePanel.setPreferredSize(new Dimension(gridSize, gridSize));
         updateButtonSizes(gridSize / 3);
 
+
+        addEscKeyListener();
+
         setVisible(true);
 
         // Додаємо слухача для динамічної зміни розміру
@@ -54,6 +59,12 @@ public abstract class GameBase extends JFrame implements GameMode {
                 setGridSize(gamePanel);
             }
         });
+    }
+
+    public GameBase(String title, String gameMode, String playerSymbol) {
+        this(title);
+        this.gameMode = gameMode;
+        this.playerSymbol = playerSymbol;
     }
 
     public void setLoggedInUser(String username) {
@@ -135,9 +146,19 @@ public abstract class GameBase extends JFrame implements GameMode {
     @Override
     public void resetGame() {
         if (loggedInUser != null) {
-            // Логіка для збереження результату в базу даних
-            boolean win = GameLogic.checkWin(gameState);
-            DatabaseManager.updateUserStats(loggedInUser, win, gameMode);
+            boolean win;
+            if (gameMode != "local"){
+                win = GameLogic.checkWin(gameState, playerSymbol);
+            }
+            else  {
+                win = GameLogic.checkWin(gameState);
+            }
+
+            boolean draw = isBoardFull() && !win; // Перевірка на нічию
+
+            if (!draw) { // Записуємо тільки якщо це не нічия
+                DatabaseManager.updateUserStats(loggedInUser, win, gameMode);
+            }
         }
 
         for (int i = 0; i < 3; i++) {
@@ -229,6 +250,30 @@ public abstract class GameBase extends JFrame implements GameMode {
             }
             System.out.println();
         }
+    }
+
+    protected void returnToMainMenu() {
+        int option = JOptionPane.showConfirmDialog(this, "Czy na pewno chcesz wrócić do głównego menu?",
+                "Powrót do menu", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) {
+            dispose(); // Закриваємо поточне вікно
+            new StartScreen(loggedInUser); // Відкриваємо головне меню
+        }
+    }
+
+    private void addEscKeyListener() {
+        JRootPane rootPane = this.getRootPane();
+
+        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = rootPane.getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke("ESCAPE"), "returnToMainMenu");
+        actionMap.put("returnToMainMenu", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                returnToMainMenu();
+            }
+        });
     }
 
 }

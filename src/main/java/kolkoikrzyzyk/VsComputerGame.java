@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class VsComputerGame extends GameBase {
     public VsComputerGame() {
-        super("Gra przeciw komputerowi");
+        super("Gra przeciw komputerowi ( X )", "vs_bot", "X");
     }
 
     @Override

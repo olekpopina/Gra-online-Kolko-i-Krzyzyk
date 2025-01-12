@@ -2,10 +2,7 @@ package kolkoikrzyzyk;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
-
 
 public class StartScreen extends JFrame {
     private String loggedInUser; // Збереження імені залогіненого користувача
@@ -30,28 +27,30 @@ public class StartScreen extends JFrame {
         topPanel.setOpaque(false);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 
-        // Логін користувача (вирівняний вправо)
+        JPanel userPanel = createUserPanel();
+        JPanel topPlayersPanel = createTopPlayersPanel();
+
+        topPanel.add(userPanel);
+        topPanel.add(topPlayersPanel);
+
+        backgroundPanel.add(topPanel, BorderLayout.NORTH);
+
+        JPanel buttonPanel = createButtonPanel();
+        backgroundPanel.add(buttonPanel, BorderLayout.CENTER);
+
+        setJMenuBar(createMenuBar());
+
+        setVisible(true);
+    }
+
+    private JPanel createUserPanel() {
         JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         userPanel.setOpaque(false);
         JLabel userLabel = new JLabel("Zalogowano jako: " + (loggedInUser != null ? loggedInUser : "Gość"));
         userLabel.setFont(new Font("Arial", Font.BOLD, 18));
         userLabel.setForeground(Color.BLUE);
         userPanel.add(userLabel);
-
-        // Топ-10 гравців
-        JPanel topPlayersPanel = createTopPlayersPanel();
-
-        // Додаємо логін і топ-10 в єдину верхню панель
-        topPanel.add(userPanel);
-        topPanel.add(topPlayersPanel);
-
-        backgroundPanel.add(topPanel, BorderLayout.NORTH);
-
-        // Середня панель з кнопками
-        JPanel buttonPanel = createButtonPanel();
-        backgroundPanel.add(buttonPanel, BorderLayout.CENTER);
-
-        setVisible(true);
+        return userPanel;
     }
 
     private JPanel createTopPlayersPanel() {
@@ -65,7 +64,7 @@ public class StartScreen extends JFrame {
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(titleLabel);
 
-        List<String> topPlayers = DatabaseManager.getTopPlayers(); // Отримання топ-10 гравців
+        List<String> topPlayers = DatabaseManager.getTopPlayers();
         for (String player : topPlayers) {
             JLabel playerLabel = new JLabel(player);
             playerLabel.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -81,11 +80,10 @@ public class StartScreen extends JFrame {
         panel.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 10, 5, 10); // Відступи між кнопками
+        gbc.insets = new Insets(5, 10, 5, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
 
-        // Кнопки з режимами гри
         JButton localGameButton = createStyledButton("Gra na jednym komputerze");
         gbc.gridy = 0;
         panel.add(localGameButton, gbc);
@@ -93,7 +91,6 @@ public class StartScreen extends JFrame {
             dispose();
             LocalGame game = new LocalGame();
             game.setLoggedInUser(loggedInUser);
-            game.setGameMode("local");
             game.updateWindowTitle();
         });
 
@@ -104,7 +101,6 @@ public class StartScreen extends JFrame {
             dispose();
             VsComputerGame game = new VsComputerGame();
             game.setLoggedInUser(loggedInUser);
-            game.setGameMode("vs_bot");
             game.updateWindowTitle();
         });
 
@@ -112,15 +108,11 @@ public class StartScreen extends JFrame {
         gbc.gridy = 2;
         panel.add(serverButton, gbc);
         serverButton.addActionListener(e -> {
-            dispose(); // Закриваємо головне меню
-            ServerGame game = new ServerGame(); // Запускаємо сервер гри
+            dispose();
+            ServerGame game = new ServerGame();
             game.setLoggedInUser(loggedInUser);
-            game.setGameMode("online");
             game.updateWindowTitle();
         });
-
-
-
 
         JButton clientButton = createStyledButton("Gra jako klient");
         gbc.gridy = 3;
@@ -130,11 +122,9 @@ public class StartScreen extends JFrame {
             dispose();
             ClientGame game = new ClientGame(ip);
             game.setLoggedInUser(loggedInUser);
-            game.setGameMode("online");
             game.updateWindowTitle();
         });
 
-        // Кнопка залогінитися
         JButton loginButton = createStyledButton("Zaloguj się");
         gbc.gridy = 4;
         panel.add(loginButton, gbc);
@@ -150,7 +140,6 @@ public class StartScreen extends JFrame {
             }
         });
 
-        // Кнопка розлогінитися
         JButton logoutButton = createStyledButton("Wyloguj się");
         gbc.gridy = 5;
         panel.add(logoutButton, gbc);
@@ -160,13 +149,85 @@ public class StartScreen extends JFrame {
             new StartScreen(null);
         });
 
-        // Кнопка виходу
         JButton exitButton = createStyledButton("Wyjście");
         gbc.gridy = 6;
         panel.add(exitButton, gbc);
         exitButton.addActionListener(e -> System.exit(0));
 
         return panel;
+    }
+
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu userMenu = new JMenu("Korzystnik");
+
+        JMenuItem registerMenuItem = new JMenuItem("Zarejestruj nowego użytkownika");
+        registerMenuItem.addActionListener(e -> showRegisterDialog());
+        userMenu.add(registerMenuItem);
+
+        JMenuItem changePasswordMenuItem = new JMenuItem("Zmień hasło");
+        changePasswordMenuItem.setEnabled(loggedInUser != null);
+        changePasswordMenuItem.addActionListener(e -> showChangePasswordDialog());
+        userMenu.add(changePasswordMenuItem);
+
+        JMenuItem viewStatsMenuItem = new JMenuItem("Pokaż statystyki");
+        viewStatsMenuItem.setEnabled(loggedInUser != null);
+        viewStatsMenuItem.addActionListener(e -> showUserStats());
+        userMenu.add(viewStatsMenuItem);
+
+        menuBar.add(userMenu);
+        return menuBar;
+    }
+
+
+    private void showRegisterDialog() {
+        JTextField usernameField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+
+        Object[] message = {
+                "Podaj nazwę użytkownika:", usernameField,
+                "Podaj hasło:", passwordField
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Rejestracja nowego użytkownika", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            String username = usernameField.getText().trim();
+            String password = new String(passwordField.getPassword());
+            if (DatabaseManager.registerUser(username, password)) {
+                JOptionPane.showMessageDialog(this, "Konto zostało utworzone!", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Użytkownik już istnieje!", "Błąd", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void showChangePasswordDialog() {
+        JPasswordField oldPasswordField = new JPasswordField();
+        JPasswordField newPasswordField = new JPasswordField();
+        JPasswordField confirmPasswordField = new JPasswordField();
+
+        Object[] message = {
+                "Podaj stare hasło:", oldPasswordField,
+                "Podaj nowe hasło:", newPasswordField,
+                "Potwierdź nowe hasło:", confirmPasswordField
+        };
+
+        int option = JOptionPane.showConfirmDialog(this, message, "Zmień hasło", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            String oldPassword = new String(oldPasswordField.getPassword());
+            String newPassword = new String(newPasswordField.getPassword());
+            String confirmPassword = new String(confirmPasswordField.getPassword());
+            if (!newPassword.equals(confirmPassword)) {
+                JOptionPane.showMessageDialog(this, "Nowe hasła nie pasują do siebie!", "Błąd", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (DatabaseManager.changePassword(loggedInUser, oldPassword, newPassword)) {
+                JOptionPane.showMessageDialog(this, "Hasło zostało zmienione!", "Sukces", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Nie udało się zmienić hasła!", "Błąd", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private JButton createStyledButton(String text) {
@@ -178,4 +239,41 @@ public class StartScreen extends JFrame {
         button.setOpaque(true);
         return button;
     }
+
+    private void showUserStats() {
+        if (loggedInUser == null) {
+            JOptionPane.showMessageDialog(this, "Zaloguj się, aby zobaczyć statystyki.", "Błąd", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        UserStats stats = DatabaseManager.getUserStats(loggedInUser);
+        if (stats == null) {
+            JOptionPane.showMessageDialog(this, "Nie udało się pobrać statystyk użytkownika.", "Błąd", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String message = String.format(
+                "<html><body>" +
+                        "<h2>Statystyki dla użytkownika: %s</h2>" +
+                        "<ul>" +
+                        "<li>Rozegrane gry (online): %d</li>" +
+                        "<li>Wygrane gry (online): %d</li>" +
+                        "<li>Przegrane gry (online): %d</li>" +
+                        "<li>Stosunek wygranych do rozegranych gier (online): %.2f</li>" +
+                        "<li>Wygrane gry przeciw komputerowi: %d</li>" +
+                        "<li>Rozegrane gry lokalne: %d</li>" +
+                        "</ul>" +
+                        "</body></html>",
+                loggedInUser,
+                stats.getGamesPlayed(),
+                stats.getWins(),
+                stats.getLosses(),
+                stats.getWinRatio(),
+                stats.getGamesVsBot(),
+                stats.getGamesLocal()
+        );
+
+        JOptionPane.showMessageDialog(this, message, "Statystyki użytkownika", JOptionPane.INFORMATION_MESSAGE);
+    }
+
 }

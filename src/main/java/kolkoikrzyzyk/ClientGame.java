@@ -9,7 +9,7 @@ public class ClientGame extends GameBase {
     private boolean isMyTurn = false; // Клієнт починає другим
 
     public ClientGame(String serverIp) {
-        super("Gra jako klient");
+        super("Gra jako klient ( O )", "online", "O");
         connectToServer(serverIp);
     }
 
@@ -58,5 +58,7 @@ public class ClientGame extends GameBase {
             showError("Błąd sieci: " + e.getMessage());
         }
     }
+
+
 }
 

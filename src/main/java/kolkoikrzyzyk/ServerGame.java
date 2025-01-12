@@ -14,7 +14,7 @@ public class ServerGame extends GameBase {
     private JFrame waitingScreen;
 
     public ServerGame() {
-        super("Gra jako serwer");
+        super("Gra jako serwer ( X )", "online", "X");
         initializeWaitingScreen(); // Показуємо екран очікування
         startServer();             // Запускаємо сервер
         setVisible(false);         // Вікно гри поки що приховане
