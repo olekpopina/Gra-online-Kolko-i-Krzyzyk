@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @brief
  * Klasa zarządzająca połączeniem z bazą danych oraz operacjami na użytkownikach i ich statystykach.
  */
 public class DatabaseManager {
@@ -44,19 +45,9 @@ public class DatabaseManager {
                 "games_vs_bot INTEGER DEFAULT 0, " +
                 "games_local INTEGER DEFAULT 0)";
 
-        String createGamesTable = "CREATE TABLE IF NOT EXISTS games (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "player1 TEXT NOT NULL, " +
-                "player2 TEXT NOT NULL, " +
-                "winner TEXT, " +
-                "game_mode TEXT NOT NULL, " + // Tryb gry: local, vs_bot, online
-                "game_result TEXT, " +
-                "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
-
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
             stmt.execute(createUsersTable);
-            stmt.execute(createGamesTable);
         } catch (SQLException e) {
             throw new RuntimeException("Nie udało się utworzyć tabel", e);
         }
