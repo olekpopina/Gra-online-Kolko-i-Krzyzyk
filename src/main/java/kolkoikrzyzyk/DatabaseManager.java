@@ -215,4 +215,17 @@ public class DatabaseManager {
         }
         return null;
     }
+
+    public static boolean deleteUser(String username) {
+        String query = "DELETE FROM users WHERE username = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, username);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

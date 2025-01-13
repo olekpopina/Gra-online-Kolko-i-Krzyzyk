@@ -48,7 +48,7 @@ public class ClientGame extends GameBase {
      *
      * @param serverIp Adres IP serwera.
      */
-    private void connectToServer(String serverIp) {
+    void connectToServer(String serverIp) {
         try {
             socket = new Socket(serverIp, 5000);
             out = new PrintWriter(socket.getOutputStream(), true);

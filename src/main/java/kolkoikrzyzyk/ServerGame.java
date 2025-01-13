@@ -77,7 +77,7 @@ public class ServerGame extends GameBase {
      * inicjuje strumienie komunikacyjne oraz przechodzi do rozgrywki.
      * Uruchamia również nowy wątek do nasłuchiwania ruchów od klienta.
      */
-    private void startServer() {
+    void startServer() {
         new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(5000);  /**< Tworzenie gniazda serwera na porcie 5000 */
