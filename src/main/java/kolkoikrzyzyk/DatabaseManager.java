@@ -4,18 +4,24 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Klasa zarządzająca połączeniem z bazą danych oraz operacjami na użytkownikach i ich statystykach.
+ */
 public class DatabaseManager {
     private static final String URL = "jdbc:sqlite:game_database.db";
 
     static {
         try {
-            Class.forName("org.sqlite.JDBC"); // Завантажуємо драйвер
+            Class.forName("org.sqlite.JDBC"); // Ładowanie sterownika SQLite
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Nie znaleziono sterownika SQLite JDBC!", e);
         }
     }
 
-    // Створюємо з'єднання з базою даних
+    /**
+     * Tworzy połączenie z bazą danych.
+     * @return Obiekt połączenia.
+     */
     public static Connection connect() {
         try {
             return DriverManager.getConnection(URL);
@@ -24,7 +30,9 @@ public class DatabaseManager {
         }
     }
 
-    // Ініціалізація таблиць
+    /**
+     * Inicjalizuje tabele w bazie danych, jeśli jeszcze nie istnieją.
+     */
     public static void initializeDatabase() {
         String createUsersTable = "CREATE TABLE IF NOT EXISTS users (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -41,7 +49,7 @@ public class DatabaseManager {
                 "player1 TEXT NOT NULL, " +
                 "player2 TEXT NOT NULL, " +
                 "winner TEXT, " +
-                "game_mode TEXT NOT NULL, " + // local, vs_bot, online
+                "game_mode TEXT NOT NULL, " + // Tryb gry: local, vs_bot, online
                 "game_result TEXT, " +
                 "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
 
@@ -54,7 +62,12 @@ public class DatabaseManager {
         }
     }
 
-    // Перевірка логіна і пароля
+    /**
+     * Sprawdza poprawność logowania użytkownika.
+     * @param username Nazwa użytkownika.
+     * @param password Hasło użytkownika.
+     * @return True, jeśli dane są poprawne, false w przeciwnym razie.
+     */
     public static boolean authenticateUser(String username, String password) {
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (Connection conn = connect();
@@ -62,13 +75,18 @@ public class DatabaseManager {
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
-            return rs.next(); // Повертає true, якщо користувач знайдений
+            return rs.next();
         } catch (SQLException e) {
             throw new RuntimeException("Nie udało się zalogować", e);
         }
     }
 
-    // Реєстрація нового користувача
+    /**
+     * Rejestruje nowego użytkownika w bazie danych.
+     * @param username Nazwa użytkownika.
+     * @param password Hasło użytkownika.
+     * @return True, jeśli rejestracja zakończyła się sukcesem, false jeśli użytkownik już istnieje.
+     */
     public static boolean registerUser(String username, String password) {
         String query = "INSERT INTO users (username, password) VALUES (?, ?)";
         try (Connection conn = connect();
@@ -78,10 +96,14 @@ public class DatabaseManager {
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
-            return false; // Якщо ім'я користувача вже існує
+            return false;
         }
     }
 
+    /**
+     * Pobiera listę najlepszych graczy.
+     * @return Lista najlepszych graczy w formacie "username: wins/gamesPlayed (vs Bot: gamesVsBot)".
+     */
     public static List<String> getTopPlayers() {
         String query = "SELECT username, wins, games_played, games_vs_bot " +
                 "FROM users ORDER BY wins DESC LIMIT 10";
@@ -108,28 +130,34 @@ public class DatabaseManager {
         return topPlayers;
     }
 
+    /**
+     * Aktualizuje statystyki użytkownika w zależności od wyniku gry i trybu gry.
+     * @param username Nazwa użytkownika.
+     * @param win True, jeśli użytkownik wygrał, false w przeciwnym razie.
+     * @param gameMode Tryb gry: "online", "vs_bot" lub "local".
+     */
     public static void updateUserStats(String username, boolean win, String gameMode) {
 
         String query = "UPDATE users " +
-                "SET games_played = games_played + CASE WHEN ? THEN 1 ELSE 0 END, " + // Інкремент для онлайн-режиму
-                "wins = wins + CASE WHEN ? AND ? THEN 1 ELSE 0 END, " + // Інкрементуємо перемоги, якщо виграв і режим онлайн
-                "losses = losses + CASE WHEN NOT ? AND ? THEN 1 ELSE 0 END, " + // Інкрементуємо поразки, якщо програв і режим онлайн
-                "games_vs_bot = games_vs_bot + CASE WHEN ? THEN 1 ELSE 0 END, " + // Інкрементуємо проти бота, якщо виграв
-                "games_local = games_local + CASE WHEN ? THEN 1 ELSE 0 END " + // Інкрементуємо локальні ігри
+                "SET games_played = games_played + CASE WHEN ? THEN 1 ELSE 0 END, " +
+                "wins = wins + CASE WHEN ? AND ? THEN 1 ELSE 0 END, " +
+                "losses = losses + CASE WHEN NOT ? AND ? THEN 1 ELSE 0 END, " +
+                "games_vs_bot = games_vs_bot + CASE WHEN ? THEN 1 ELSE 0 END, " +
+                "games_local = games_local + CASE WHEN ? THEN 1 ELSE 0 END " +
                 "WHERE username = ?";
 
 
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            pstmt.setBoolean(1, gameMode.equals("online")); // Інкремент для онлайн-режиму
-            pstmt.setBoolean(2, win); // Інкремент для перемог
-            pstmt.setBoolean(3, gameMode.equals("online")); // Умови для перемог (режим онлайн)
-            pstmt.setBoolean(4, win); // Інкремент для поразок (NOT win)
-            pstmt.setBoolean(5, gameMode.equals("online")); // Умови для поразок (режим онлайн)
-            pstmt.setBoolean(6, gameMode.equals("vs_bot") && win); // Інкремент для ігор проти бота
-            pstmt.setBoolean(7, gameMode.equals("local")); // Інкремент для локальних ігор
-            pstmt.setString(8, username); // Оновлюємо для конкретного користувача
+            pstmt.setBoolean(1, gameMode.equals("online"));
+            pstmt.setBoolean(2, win);
+            pstmt.setBoolean(3, gameMode.equals("online"));
+            pstmt.setBoolean(4, win);
+            pstmt.setBoolean(5, gameMode.equals("online"));
+            pstmt.setBoolean(6, gameMode.equals("vs_bot") && win);
+            pstmt.setBoolean(7, gameMode.equals("local"));
+            pstmt.setString(8, username);
 
             pstmt.executeUpdate();
 
@@ -139,21 +167,32 @@ public class DatabaseManager {
 
     }
 
+    /**
+     * Zmienia hasło użytkownika.
+     * @param username Nazwa użytkownika.
+     * @param oldPassword Stare hasło użytkownika.
+     * @param newPassword Nowe hasło użytkownika.
+     * @return True, jeśli hasło zostało zmienione, false w przeciwnym razie.
+     */
     public static boolean changePassword(String username, String oldPassword, String newPassword) {
         String query = "UPDATE users SET password = ? WHERE username = ? AND password = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, newPassword); // Хешуйте пароль, якщо потрібно
+            pstmt.setString(1, newPassword);
             pstmt.setString(2, username);
-            pstmt.setString(3, oldPassword); // Перевіряємо старий пароль
-            return pstmt.executeUpdate() > 0; // Повертаємо true, якщо оновлено хоча б 1 запис
+            pstmt.setString(3, oldPassword);
+            return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-
+    /**
+     * Pobiera statystyki użytkownika.
+     * @param username Nazwa użytkownika.
+     * @return Obiekt UserStats zawierający statystyki użytkownika lub null, jeśli użytkownik nie istnieje.
+     */
     public static UserStats getUserStats(String username) {
         String query = "SELECT games_played, wins, losses, games_vs_bot, games_local " +
                 "FROM users WHERE username = ?";
@@ -174,9 +213,6 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null; // Якщо статистику не вдалося отримати
+        return null;
     }
-
-
-
 }

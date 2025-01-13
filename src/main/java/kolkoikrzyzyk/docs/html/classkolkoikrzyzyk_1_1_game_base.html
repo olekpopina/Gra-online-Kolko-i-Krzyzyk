@@ -1,0 +1,824 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.13.2"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Gra online Kółko i Krzyżyk: Dokumentacja klasy kolkoikrzyzyk.GameBase</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Gra online Kółko i Krzyżyk
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Wygenerowano za pomocą Doxygen 1.13.2 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Szukaj',false);
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Wczytywanie...</div>
+<div class="SRStatus" id="Searching">Szukanie...</div>
+<div class="SRStatus" id="NoMatches">Brak dopasowań</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespacekolkoikrzyzyk.html">kolkoikrzyzyk</a></li><li class="navelem"><a class="el" href="classkolkoikrzyzyk_1_1_game_base.html">GameBase</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div id="doc-content">
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Metody publiczne</a> &#124;
+<a href="#pro-methods">Metody chronione</a> &#124;
+<a href="#pro-attribs">Atrybuty chronione</a> &#124;
+<a href="#pri-methods">Metody prywatne</a> &#124;
+<a href="#pri-attribs">Atrybuty prywatne</a> &#124;
+<a href="classkolkoikrzyzyk_1_1_game_base-members.html">Lista wszystkich składowych</a>  </div>
+  <div class="headertitle"><div class="title">Dokumentacja klasy kolkoikrzyzyk.GameBase<span class="mlabels"><span class="mlabel abstract">abstract</span></span></div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Abstrakcyjna klasa bazowa implementująca wspólne funkcje gry Kółko i Krzyżyk.  
+ <a href="#details">Więcej...</a></p>
+<div class="dynheader">
+Diagram dziedziczenia dla kolkoikrzyzyk.GameBase</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classkolkoikrzyzyk_1_1_game_base.png" usemap="#kolkoikrzyzyk.GameBase_map" alt=""/>
+  <map id="kolkoikrzyzyk.GameBase_map" name="kolkoikrzyzyk.GameBase_map">
+<area href="interfacekolkoikrzyzyk_1_1_game_mode.html" title="Interfejs definiujący tryb gry w &quot;Kółko i Krzyżyk&quot;." alt="kolkoikrzyzyk.GameMode" shape="rect" coords="404,0,596,24"/>
+<area href="classkolkoikrzyzyk_1_1_client_game.html" title="Klasa reprezentująca grę jako klient w trybie online." alt="kolkoikrzyzyk.ClientGame" shape="rect" coords="0,112,192,136"/>
+<area href="classkolkoikrzyzyk_1_1_local_game.html" title="Klasa reprezentująca tryb gry &quot;Gra na jednym komputerze&quot;." alt="kolkoikrzyzyk.LocalGame" shape="rect" coords="202,112,394,136"/>
+<area href="classkolkoikrzyzyk_1_1_server_game.html" title="Klasa reprezentująca grę w trybie serwera w grze &quot;Kółko i Krzyżyk&quot;." alt="kolkoikrzyzyk.ServerGame" shape="rect" coords="404,112,596,136"/>
+<area href="classkolkoikrzyzyk_1_1_vs_computer_game.html" title="Reprezentuje grę &quot;Kółko i Krzyżyk&quot; przeciwko komputerowi." alt="kolkoikrzyzyk.VsComputerGame" shape="rect" coords="606,112,798,136"/>
+  </map>
+</div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Metody publiczne</h2></td></tr>
+<tr class="memitem:a0719b930ab09cf7ad20cdd3c8a3a1073" id="r_a0719b930ab09cf7ad20cdd3c8a3a1073"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0719b930ab09cf7ad20cdd3c8a3a1073">GameBase</a> (String title)</td></tr>
+<tr class="memdesc:a0719b930ab09cf7ad20cdd3c8a3a1073"><td class="mdescLeft">&#160;</td><td class="mdescRight">Konstruktor tworzący okno gry z domyślnym trybem lokalnym.  <br /></td></tr>
+<tr class="separator:a0719b930ab09cf7ad20cdd3c8a3a1073"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06a77ae49bd8e95680d4a55cb6586d0e" id="r_a06a77ae49bd8e95680d4a55cb6586d0e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06a77ae49bd8e95680d4a55cb6586d0e">GameBase</a> (String title, String <a class="el" href="#a8b4e3a36342eeb1d4949878d6601c10d">gameMode</a>, String <a class="el" href="#a28c19ce0aae6e62421f29220873f69c3">playerSymbol</a>)</td></tr>
+<tr class="memdesc:a06a77ae49bd8e95680d4a55cb6586d0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Konstruktor tworzący okno gry z określonym trybem i symbolem gracza.  <br /></td></tr>
+<tr class="separator:a06a77ae49bd8e95680d4a55cb6586d0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21120a0812bcc35cd3eb64c34eea6150" id="r_a21120a0812bcc35cd3eb64c34eea6150"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21120a0812bcc35cd3eb64c34eea6150">setLoggedInUser</a> (String username)</td></tr>
+<tr class="memdesc:a21120a0812bcc35cd3eb64c34eea6150"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ustawia zalogowanego użytkownika.  <br /></td></tr>
+<tr class="separator:a21120a0812bcc35cd3eb64c34eea6150"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cc8b091ae722257b0476168f1aea0b0" id="r_a2cc8b091ae722257b0476168f1aea0b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cc8b091ae722257b0476168f1aea0b0">updateWindowTitle</a> ()</td></tr>
+<tr class="memdesc:a2cc8b091ae722257b0476168f1aea0b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aktualizuje tytuł okna, dodając nazwę zalogowanego użytkownika.  <br /></td></tr>
+<tr class="separator:a2cc8b091ae722257b0476168f1aea0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe1150fe7c933ca4c8ece3caffa5cc28" id="r_afe1150fe7c933ca4c8ece3caffa5cc28"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe1150fe7c933ca4c8ece3caffa5cc28">resetGame</a> ()</td></tr>
+<tr class="memdesc:afe1150fe7c933ca4c8ece3caffa5cc28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resetuje grę, czyszcząc planszę i stan gry.  <br /></td></tr>
+<tr class="separator:afe1150fe7c933ca4c8ece3caffa5cc28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_interfacekolkoikrzyzyk_1_1_game_mode"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_interfacekolkoikrzyzyk_1_1_game_mode')"><img src="closed.png" alt="-"/>&#160;Metody publiczne dziedziczone z <a class="el" href="interfacekolkoikrzyzyk_1_1_game_mode.html">kolkoikrzyzyk.GameMode</a></td></tr>
+<tr class="memitem:abac9495b2562dfd2ec31cc47587d2640 inherit pub_methods_interfacekolkoikrzyzyk_1_1_game_mode" id="r_abac9495b2562dfd2ec31cc47587d2640"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacekolkoikrzyzyk_1_1_game_mode.html#abac9495b2562dfd2ec31cc47587d2640">makeMove</a> (int row, int col)</td></tr>
+<tr class="memdesc:abac9495b2562dfd2ec31cc47587d2640 inherit pub_methods_interfacekolkoikrzyzyk_1_1_game_mode"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wykonuje ruch gracza w określonej pozycji na planszy.  <br /></td></tr>
+<tr class="separator:abac9495b2562dfd2ec31cc47587d2640 inherit pub_methods_interfacekolkoikrzyzyk_1_1_game_mode"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Metody chronione</h2></td></tr>
+<tr class="memitem:a8bab3010f51c9399b3bb6572dc22d8aa" id="r_a8bab3010f51c9399b3bb6572dc22d8aa"><td class="memItemLeft" align="right" valign="top">ImageIcon&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8bab3010f51c9399b3bb6572dc22d8aa">getPlayerIcon</a> (String player, int buttonSize)</td></tr>
+<tr class="memdesc:a8bab3010f51c9399b3bb6572dc22d8aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pobiera ikonę odpowiadającą symbolowi gracza.  <br /></td></tr>
+<tr class="separator:a8bab3010f51c9399b3bb6572dc22d8aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcdb4e4a0b21a332d25d049f53aa1477" id="r_adcdb4e4a0b21a332d25d049f53aa1477"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcdb4e4a0b21a332d25d049f53aa1477">checkGameStatus</a> ()</td></tr>
+<tr class="memdesc:adcdb4e4a0b21a332d25d049f53aa1477"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sprawdza, czy gra zakończyła się wygraną lub remisem.  <br /></td></tr>
+<tr class="separator:adcdb4e4a0b21a332d25d049f53aa1477"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc523ff0080354b78f1b5db23511dfe6" id="r_acc523ff0080354b78f1b5db23511dfe6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc523ff0080354b78f1b5db23511dfe6">showError</a> (String message)</td></tr>
+<tr class="memdesc:acc523ff0080354b78f1b5db23511dfe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wyświetla komunikat o błędzie w oknie dialogowym.  <br /></td></tr>
+<tr class="separator:acc523ff0080354b78f1b5db23511dfe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e717fd4401cd65a5b211a8dc2436b41" id="r_a0e717fd4401cd65a5b211a8dc2436b41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e717fd4401cd65a5b211a8dc2436b41">returnToMainMenu</a> ()</td></tr>
+<tr class="memdesc:a0e717fd4401cd65a5b211a8dc2436b41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Powraca do głównego menu gry po potwierdzeniu przez użytkownika.  <br /></td></tr>
+<tr class="separator:a0e717fd4401cd65a5b211a8dc2436b41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Atrybuty chronione</h2></td></tr>
+<tr class="memitem:a0565983efa2522dfbb7ab4ee9f8e5af0" id="r_a0565983efa2522dfbb7ab4ee9f8e5af0"><td class="memItemLeft" align="right" valign="top">final JButton[][]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0565983efa2522dfbb7ab4ee9f8e5af0">buttons</a> = new JButton[3][3]</td></tr>
+<tr class="memdesc:a0565983efa2522dfbb7ab4ee9f8e5af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Przyciski reprezentujące planszę gry 3x3.  <br /></td></tr>
+<tr class="separator:a0565983efa2522dfbb7ab4ee9f8e5af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51f4dc219188603857b8fc4dad3b015b" id="r_a51f4dc219188603857b8fc4dad3b015b"><td class="memItemLeft" align="right" valign="top">final String[][]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51f4dc219188603857b8fc4dad3b015b">gameState</a> = new String[3][3]</td></tr>
+<tr class="memdesc:a51f4dc219188603857b8fc4dad3b015b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tablica przechowująca aktualny stan gry. Wartości: "X", "O" lub null (dla pustej komórki).  <br /></td></tr>
+<tr class="separator:a51f4dc219188603857b8fc4dad3b015b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74a25ac8245556fc36ea3b271e12f399" id="r_a74a25ac8245556fc36ea3b271e12f399"><td class="memItemLeft" align="right" valign="top">BufferedImage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74a25ac8245556fc36ea3b271e12f399">obrazekX</a> = <a class="el" href="classkolkoikrzyzyk_1_1_resource_loader.html#a77ebd0dc45b9cf4c9d4a2b29b9edd4ce">ResourceLoader.loadImage</a>(&quot;/images/x.png&quot;)</td></tr>
+<tr class="memdesc:a74a25ac8245556fc36ea3b271e12f399"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obrazek symbolu X.  <br /></td></tr>
+<tr class="separator:a74a25ac8245556fc36ea3b271e12f399"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd0750803a0270ca89c9aa3d517fc8bd" id="r_abd0750803a0270ca89c9aa3d517fc8bd"><td class="memItemLeft" align="right" valign="top">BufferedImage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd0750803a0270ca89c9aa3d517fc8bd">obrazekO</a> = <a class="el" href="classkolkoikrzyzyk_1_1_resource_loader.html#a77ebd0dc45b9cf4c9d4a2b29b9edd4ce">ResourceLoader.loadImage</a>(&quot;/images/o.png&quot;)</td></tr>
+<tr class="memdesc:abd0750803a0270ca89c9aa3d517fc8bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obrazek symbolu O.  <br /></td></tr>
+<tr class="separator:abd0750803a0270ca89c9aa3d517fc8bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ba0a13d3fadc9b7b2701e60a7b34218" id="r_a4ba0a13d3fadc9b7b2701e60a7b34218"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ba0a13d3fadc9b7b2701e60a7b34218">isReturningToMenu</a> = false</td></tr>
+<tr class="memdesc:a4ba0a13d3fadc9b7b2701e60a7b34218"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flaga określająca, czy gracz wraca do menu.  <br /></td></tr>
+<tr class="separator:a4ba0a13d3fadc9b7b2701e60a7b34218"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ef4dd0d8665f9abbf6466d4d12f8123" id="r_a4ef4dd0d8665f9abbf6466d4d12f8123"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ef4dd0d8665f9abbf6466d4d12f8123">loggedInUser</a> = null</td></tr>
+<tr class="memdesc:a4ef4dd0d8665f9abbf6466d4d12f8123"><td class="mdescLeft">&#160;</td><td class="mdescRight">Zalogowany użytkownik.  <br /></td></tr>
+<tr class="separator:a4ef4dd0d8665f9abbf6466d4d12f8123"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28c19ce0aae6e62421f29220873f69c3" id="r_a28c19ce0aae6e62421f29220873f69c3"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28c19ce0aae6e62421f29220873f69c3">playerSymbol</a> = &quot;X&quot;</td></tr>
+<tr class="memdesc:a28c19ce0aae6e62421f29220873f69c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Symbol gracza (domyślnie "X").  <br /></td></tr>
+<tr class="separator:a28c19ce0aae6e62421f29220873f69c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Metody prywatne</h2></td></tr>
+<tr class="memitem:aac8c5a6dc2f9f73ffcd18f6857f7e205" id="r_aac8c5a6dc2f9f73ffcd18f6857f7e205"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac8c5a6dc2f9f73ffcd18f6857f7e205">initializeButtons</a> (JPanel panel)</td></tr>
+<tr class="memdesc:aac8c5a6dc2f9f73ffcd18f6857f7e205"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicjalizuje przyciski na planszy gry.  <br /></td></tr>
+<tr class="separator:aac8c5a6dc2f9f73ffcd18f6857f7e205"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a0e138a35e38c0df0cd6b75ebfaa011" id="r_a8a0e138a35e38c0df0cd6b75ebfaa011"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8a0e138a35e38c0df0cd6b75ebfaa011">setGridSize</a> (JPanel gamePanel)</td></tr>
+<tr class="memdesc:a8a0e138a35e38c0df0cd6b75ebfaa011"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ustawia rozmiar planszy gry na podstawie rozmiaru okna.  <br /></td></tr>
+<tr class="separator:a8a0e138a35e38c0df0cd6b75ebfaa011"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adba88064337e101ed22607ff3be40de6" id="r_adba88064337e101ed22607ff3be40de6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adba88064337e101ed22607ff3be40de6">updateButtonSizes</a> (int buttonSize)</td></tr>
+<tr class="memdesc:adba88064337e101ed22607ff3be40de6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aktualizuje rozmiar przycisków na planszy.  <br /></td></tr>
+<tr class="separator:adba88064337e101ed22607ff3be40de6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab50912824cb18e983c6ceb78725d801c" id="r_ab50912824cb18e983c6ceb78725d801c"><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab50912824cb18e983c6ceb78725d801c">isBoardFull</a> ()</td></tr>
+<tr class="memdesc:ab50912824cb18e983c6ceb78725d801c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sprawdza, czy wszystkie pola na planszy są zajęte.  <br /></td></tr>
+<tr class="separator:ab50912824cb18e983c6ceb78725d801c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d025b4adcddd7ccf84ed8c0815c5dff" id="r_a8d025b4adcddd7ccf84ed8c0815c5dff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d025b4adcddd7ccf84ed8c0815c5dff">addEscKeyListener</a> ()</td></tr>
+<tr class="memdesc:a8d025b4adcddd7ccf84ed8c0815c5dff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dodaje obsługę klawisza ESC do powrotu do menu głównego.  <br /></td></tr>
+<tr class="separator:a8d025b4adcddd7ccf84ed8c0815c5dff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Atrybuty prywatne</h2></td></tr>
+<tr class="memitem:a8b4e3a36342eeb1d4949878d6601c10d" id="r_a8b4e3a36342eeb1d4949878d6601c10d"><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b4e3a36342eeb1d4949878d6601c10d">gameMode</a> = &quot;local&quot;</td></tr>
+<tr class="memdesc:a8b4e3a36342eeb1d4949878d6601c10d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tryb gry: "local", "vs_bot" lub "online".  <br /></td></tr>
+<tr class="separator:a8b4e3a36342eeb1d4949878d6601c10d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Opis szczegółowy</h2>
+<div class="textblock"><p>Abstrakcyjna klasa bazowa implementująca wspólne funkcje gry Kółko i Krzyżyk. </p>
+</div><h2 class="groupheader">Dokumentacja konstruktora i destruktora</h2>
+<a id="a0719b930ab09cf7ad20cdd3c8a3a1073" name="a0719b930ab09cf7ad20cdd3c8a3a1073"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0719b930ab09cf7ad20cdd3c8a3a1073">&#9670;&#160;</a></span>GameBase() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">kolkoikrzyzyk.GameBase.GameBase </td>
+          <td>(</td>
+          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>title</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Konstruktor tworzący okno gry z domyślnym trybem lokalnym. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">title</td><td>Tytuł okna. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a06a77ae49bd8e95680d4a55cb6586d0e" name="a06a77ae49bd8e95680d4a55cb6586d0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06a77ae49bd8e95680d4a55cb6586d0e">&#9670;&#160;</a></span>GameBase() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">kolkoikrzyzyk.GameBase.GameBase </td>
+          <td>(</td>
+          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>title</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>gameMode</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>playerSymbol</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Konstruktor tworzący okno gry z określonym trybem i symbolem gracza. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">title</td><td>Tytuł okna. </td></tr>
+    <tr><td class="paramname">gameMode</td><td>Wybrany tryb gry. </td></tr>
+    <tr><td class="paramname">playerSymbol</td><td>Symbol przypisany do gracza. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Dokumentacja funkcji składowych</h2>
+<a id="a8d025b4adcddd7ccf84ed8c0815c5dff" name="a8d025b4adcddd7ccf84ed8c0815c5dff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d025b4adcddd7ccf84ed8c0815c5dff">&#9670;&#160;</a></span>addEscKeyListener()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kolkoikrzyzyk.GameBase.addEscKeyListener </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Dodaje obsługę klawisza ESC do powrotu do menu głównego. </p>
+<p>Przypisuje akcję powrotu do głównego menu do klawisza ESCAPE, która jest wykonywana w kontekście aktywnego okna gry. </p>
+
+</div>
+</div>
+<a id="adcdb4e4a0b21a332d25d049f53aa1477" name="adcdb4e4a0b21a332d25d049f53aa1477"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcdb4e4a0b21a332d25d049f53aa1477">&#9670;&#160;</a></span>checkGameStatus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean kolkoikrzyzyk.GameBase.checkGameStatus </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sprawdza, czy gra zakończyła się wygraną lub remisem. </p>
+<dl class="section return"><dt>Zwraca</dt><dd>true, jeśli gra się zakończyła (wygrana lub remis), false w przeciwnym razie.</dd></dl>
+<p>Wyświetla komunikaty dla gracza o wyniku gry. Jeśli gra się zakończyła, resetuje planszę. </p>
+
+</div>
+</div>
+<a id="a8bab3010f51c9399b3bb6572dc22d8aa" name="a8bab3010f51c9399b3bb6572dc22d8aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bab3010f51c9399b3bb6572dc22d8aa">&#9670;&#160;</a></span>getPlayerIcon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ImageIcon kolkoikrzyzyk.GameBase.getPlayerIcon </td>
+          <td>(</td>
+          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>player</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>buttonSize</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pobiera ikonę odpowiadającą symbolowi gracza. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">player</td><td>Symbol gracza ("X" lub "O"). </td></tr>
+    <tr><td class="paramname">buttonSize</td><td>Rozmiar przycisku, do którego ikona ma być dopasowana. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Zwraca</dt><dd>Ikona gracza jako obiekt ImageIcon. </dd></dl>
+
+</div>
+</div>
+<a id="aac8c5a6dc2f9f73ffcd18f6857f7e205" name="aac8c5a6dc2f9f73ffcd18f6857f7e205"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac8c5a6dc2f9f73ffcd18f6857f7e205">&#9670;&#160;</a></span>initializeButtons()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kolkoikrzyzyk.GameBase.initializeButtons </td>
+          <td>(</td>
+          <td class="paramtype">JPanel</td>          <td class="paramname"><span class="paramname"><em>panel</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Inicjalizuje przyciski na planszy gry. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">panel</td><td>Panel, do którego dodawane są przyciski. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab50912824cb18e983c6ceb78725d801c" name="ab50912824cb18e983c6ceb78725d801c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab50912824cb18e983c6ceb78725d801c">&#9670;&#160;</a></span>isBoardFull()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean kolkoikrzyzyk.GameBase.isBoardFull </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sprawdza, czy wszystkie pola na planszy są zajęte. </p>
+<dl class="section return"><dt>Zwraca</dt><dd>true, jeśli plansza jest pełna, false w przeciwnym razie. </dd></dl>
+
+</div>
+</div>
+<a id="afe1150fe7c933ca4c8ece3caffa5cc28" name="afe1150fe7c933ca4c8ece3caffa5cc28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe1150fe7c933ca4c8ece3caffa5cc28">&#9670;&#160;</a></span>resetGame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kolkoikrzyzyk.GameBase.resetGame </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resetuje grę, czyszcząc planszę i stan gry. </p>
+<p>Jeśli użytkownik jest zalogowany, aktualizuje statystyki w bazie danych w oparciu o wynik ostatniej gry.</p>
+<dl class="section note"><dt>Nota</dt><dd>Metoda wykonuje reset gry, przywracając wszystkie pola do stanu początkowego. </dd></dl>
+
+<p>Implementuje <a class="el" href="interfacekolkoikrzyzyk_1_1_game_mode.html#adaf7224e1312d1a3571b4c6e06188dc4">kolkoikrzyzyk.GameMode</a>.</p>
+
+</div>
+</div>
+<a id="a0e717fd4401cd65a5b211a8dc2436b41" name="a0e717fd4401cd65a5b211a8dc2436b41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e717fd4401cd65a5b211a8dc2436b41">&#9670;&#160;</a></span>returnToMainMenu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kolkoikrzyzyk.GameBase.returnToMainMenu </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Powraca do głównego menu gry po potwierdzeniu przez użytkownika. </p>
+<p>Wyświetla okno dialogowe z pytaniem o potwierdzenie. Jeśli użytkownik zaakceptuje, zamyka aktualne okno gry i otwiera ekran startowy. Jeśli użytkownik odmówi, pozostaje w grze. </p>
+
+<p>Reimplementowana w <a class="el" href="classkolkoikrzyzyk_1_1_client_game.html#a3c854a442720783780e2d14e0d64ac09">kolkoikrzyzyk.ClientGame</a> i <a class="el" href="classkolkoikrzyzyk_1_1_server_game.html#a775f968bdbd22d77d9ece112e075d88c">kolkoikrzyzyk.ServerGame</a>.</p>
+
+</div>
+</div>
+<a id="a8a0e138a35e38c0df0cd6b75ebfaa011" name="a8a0e138a35e38c0df0cd6b75ebfaa011"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a0e138a35e38c0df0cd6b75ebfaa011">&#9670;&#160;</a></span>setGridSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kolkoikrzyzyk.GameBase.setGridSize </td>
+          <td>(</td>
+          <td class="paramtype">JPanel</td>          <td class="paramname"><span class="paramname"><em>gamePanel</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Ustawia rozmiar planszy gry na podstawie rozmiaru okna. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gamePanel</td><td>Panel zawierający planszę gry. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a21120a0812bcc35cd3eb64c34eea6150" name="a21120a0812bcc35cd3eb64c34eea6150"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21120a0812bcc35cd3eb64c34eea6150">&#9670;&#160;</a></span>setLoggedInUser()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kolkoikrzyzyk.GameBase.setLoggedInUser </td>
+          <td>(</td>
+          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>username</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Ustawia zalogowanego użytkownika. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">username</td><td>Nazwa użytkownika. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="acc523ff0080354b78f1b5db23511dfe6" name="acc523ff0080354b78f1b5db23511dfe6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc523ff0080354b78f1b5db23511dfe6">&#9670;&#160;</a></span>showError()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kolkoikrzyzyk.GameBase.showError </td>
+          <td>(</td>
+          <td class="paramtype">String</td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Wyświetla komunikat o błędzie w oknie dialogowym. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">message</td><td>Treść komunikatu błędu. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="adba88064337e101ed22607ff3be40de6" name="adba88064337e101ed22607ff3be40de6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adba88064337e101ed22607ff3be40de6">&#9670;&#160;</a></span>updateButtonSizes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kolkoikrzyzyk.GameBase.updateButtonSizes </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>buttonSize</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Aktualizuje rozmiar przycisków na planszy. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buttonSize</td><td>Nowy rozmiar przycisków. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2cc8b091ae722257b0476168f1aea0b0" name="a2cc8b091ae722257b0476168f1aea0b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cc8b091ae722257b0476168f1aea0b0">&#9670;&#160;</a></span>updateWindowTitle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void kolkoikrzyzyk.GameBase.updateWindowTitle </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Aktualizuje tytuł okna, dodając nazwę zalogowanego użytkownika. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Dokumentacja atrybutów składowych</h2>
+<a id="a0565983efa2522dfbb7ab4ee9f8e5af0" name="a0565983efa2522dfbb7ab4ee9f8e5af0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0565983efa2522dfbb7ab4ee9f8e5af0">&#9670;&#160;</a></span>buttons</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">final JButton [][] kolkoikrzyzyk.GameBase.buttons = new JButton[3][3]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Przyciski reprezentujące planszę gry 3x3. </p>
+
+</div>
+</div>
+<a id="a8b4e3a36342eeb1d4949878d6601c10d" name="a8b4e3a36342eeb1d4949878d6601c10d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b4e3a36342eeb1d4949878d6601c10d">&#9670;&#160;</a></span>gameMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">String kolkoikrzyzyk.GameBase.gameMode = &quot;local&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tryb gry: "local", "vs_bot" lub "online". </p>
+
+</div>
+</div>
+<a id="a51f4dc219188603857b8fc4dad3b015b" name="a51f4dc219188603857b8fc4dad3b015b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51f4dc219188603857b8fc4dad3b015b">&#9670;&#160;</a></span>gameState</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">final String [][] kolkoikrzyzyk.GameBase.gameState = new String[3][3]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tablica przechowująca aktualny stan gry. Wartości: "X", "O" lub null (dla pustej komórki). </p>
+
+</div>
+</div>
+<a id="a4ba0a13d3fadc9b7b2701e60a7b34218" name="a4ba0a13d3fadc9b7b2701e60a7b34218"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ba0a13d3fadc9b7b2701e60a7b34218">&#9670;&#160;</a></span>isReturningToMenu</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean kolkoikrzyzyk.GameBase.isReturningToMenu = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flaga określająca, czy gracz wraca do menu. </p>
+
+</div>
+</div>
+<a id="a4ef4dd0d8665f9abbf6466d4d12f8123" name="a4ef4dd0d8665f9abbf6466d4d12f8123"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ef4dd0d8665f9abbf6466d4d12f8123">&#9670;&#160;</a></span>loggedInUser</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">String kolkoikrzyzyk.GameBase.loggedInUser = null</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Zalogowany użytkownik. </p>
+
+</div>
+</div>
+<a id="abd0750803a0270ca89c9aa3d517fc8bd" name="abd0750803a0270ca89c9aa3d517fc8bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd0750803a0270ca89c9aa3d517fc8bd">&#9670;&#160;</a></span>obrazekO</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">BufferedImage kolkoikrzyzyk.GameBase.obrazekO = <a class="el" href="classkolkoikrzyzyk_1_1_resource_loader.html#a77ebd0dc45b9cf4c9d4a2b29b9edd4ce">ResourceLoader.loadImage</a>(&quot;/images/o.png&quot;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Obrazek symbolu O. </p>
+
+</div>
+</div>
+<a id="a74a25ac8245556fc36ea3b271e12f399" name="a74a25ac8245556fc36ea3b271e12f399"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74a25ac8245556fc36ea3b271e12f399">&#9670;&#160;</a></span>obrazekX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">BufferedImage kolkoikrzyzyk.GameBase.obrazekX = <a class="el" href="classkolkoikrzyzyk_1_1_resource_loader.html#a77ebd0dc45b9cf4c9d4a2b29b9edd4ce">ResourceLoader.loadImage</a>(&quot;/images/x.png&quot;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Obrazek symbolu X. </p>
+
+</div>
+</div>
+<a id="a28c19ce0aae6e62421f29220873f69c3" name="a28c19ce0aae6e62421f29220873f69c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28c19ce0aae6e62421f29220873f69c3">&#9670;&#160;</a></span>playerSymbol</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">String kolkoikrzyzyk.GameBase.playerSymbol = &quot;X&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Symbol gracza (domyślnie "X"). </p>
+
+</div>
+</div>
+<hr/>Dokumentacja dla tej klasy została wygenerowana z pliku:<ul>
+<li>D:/Gra-online-kolko-krzyzyk/src/main/java/kolkoikrzyzyk/<a class="el" href="_game_base_8java.html">GameBase.java</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Wygenerowano za pomocą&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2
+</small></address>
+</div><!-- doc-content -->
+</body>
+</html>
