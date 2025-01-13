@@ -13,7 +13,7 @@ import java.util.List;
  * @note Ekran wyświetla informacje o zalogowanym użytkowniku oraz najlepszych graczach w grze.
  */
 public class StartScreen extends JFrame {
-    private final String loggedInUser; ///< Zmienna przechowująca imię zalogowanego użytkownika
+    private String loggedInUser; ///< Zmienna przechowująca imię zalogowanego użytkownika
 
     /**
      * @brief Konstruktor ekranu startowego.
@@ -240,7 +240,7 @@ public class StartScreen extends JFrame {
 
         // Opcja zmiany hasła
         JMenuItem changePasswordMenuItem = new JMenuItem("Zmień hasło");
-        changePasswordMenuItem.setEnabled(loggedInUser != null);// Tylko po zalogowaniu
+        changePasswordMenuItem.setEnabled(loggedInUser != null); // Tylko po zalogowaniu
         changePasswordMenuItem.addActionListener(e -> showChangePasswordDialog());
         userMenu.add(changePasswordMenuItem);
 
@@ -249,6 +249,29 @@ public class StartScreen extends JFrame {
         viewStatsMenuItem.setEnabled(loggedInUser != null); // Tylko po zalogowaniu
         viewStatsMenuItem.addActionListener(e -> showUserStats());
         userMenu.add(viewStatsMenuItem);
+
+        // Opcja usunięcia użytkownika
+        JMenuItem deleteUserMenuItem = new JMenuItem("Usuń konto");
+        deleteUserMenuItem.setEnabled(loggedInUser != null); // Opcja dostępna tylko po zalogowaniu
+        deleteUserMenuItem.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Czy na pewno chcesz usunąć swoje konto?",
+                    "Potwierdzenie usunięcia konta",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                boolean deleted = DatabaseManager.deleteUser(loggedInUser);
+                if (deleted) {
+                    JOptionPane.showMessageDialog(this, "Twoje konto zostało pomyślnie usunięte.");
+                    loggedInUser = null; // Rozloguj użytkownika
+                    dispose(); // Zamknij bieżące okno
+                    new StartScreen(null); // Powróć do ekranu głównego
+                } else {
+                    JOptionPane.showMessageDialog(this, "Wystąpił problem podczas usuwania konta.",
+                            "Błąd", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        userMenu.add(deleteUserMenuItem);
 
         menuBar.add(userMenu);
         return menuBar;
