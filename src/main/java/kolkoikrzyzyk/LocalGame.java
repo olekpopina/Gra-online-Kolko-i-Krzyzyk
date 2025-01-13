@@ -44,7 +44,6 @@ public class LocalGame extends GameBase {
         buttons[row][col].setText(""); // Czyści tekst przycisku
 
         turaGraczaX = !turaGraczaX; // Przełącza turę na drugiego gracza
-        printGameState(); // Drukuje stan gry w konsoli
         checkGameStatus(); // Sprawdza status gry
     }
 }
