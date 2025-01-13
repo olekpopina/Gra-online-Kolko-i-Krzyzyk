@@ -79,18 +79,28 @@ public class ClientGame extends GameBase {
 
     @Override
     protected void returnToMainMenu() {
+        if (isReturningToMenu) return; // Уникаємо повторного виклику
+        isReturningToMenu = true;
+
         int option = JOptionPane.showConfirmDialog(this, "Czy na pewno chcesz wrócić do głównego menu?",
                 "Powrót do menu", JOptionPane.YES_NO_OPTION);
         if (option == JOptionPane.YES_OPTION) {
             try {
-                out.println("DISCONNECT"); // Повідомляємо сервер про розрив
+                if (out != null) {
+                    out.println("DISCONNECT"); // Повідомляємо сервер про розрив
+                }
             } catch (Exception ignored) {
             }
             closeConnection();
-            dispose();
-            new StartScreen(loggedInUser);
+            SwingUtilities.invokeLater(() -> {
+                dispose();
+                new StartScreen(loggedInUser);
+            });
+        } else {
+            isReturningToMenu = false; // Скидаємо прапорець
         }
     }
+
 
     private void closeConnection() {
         try {

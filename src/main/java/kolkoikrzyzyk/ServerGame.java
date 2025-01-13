@@ -76,7 +76,7 @@ public class ServerGame extends GameBase {
                 SwingUtilities.invokeLater(() -> setVisible(true));
 
                 // Починаємо слухати хід клієнта
-                new Thread(this::listenForMoves).start();
+                new Thread(this::listenForClientMoves).start();
 
             } catch (IOException e) {
                 showError("Błąd serwera: " + e.getMessage());
@@ -117,11 +117,11 @@ public class ServerGame extends GameBase {
         checkGameStatus();
     }
 
-    private void listenForMoves() {
+    private void listenForClientMoves() {
         try {
             String line;
             while ((line = in.readLine()) != null) {
-                // Обробка отриманого ходу
+                // Обробка ходу клієнта
                 String[] parts = line.split(",");
                 int row = Integer.parseInt(parts[0]);
                 int col = Integer.parseInt(parts[1]);
@@ -135,7 +135,7 @@ public class ServerGame extends GameBase {
                 checkGameStatus();
             }
 
-            // Якщо цикл завершився (readLine() повернув null)
+            // Якщо readLine() повернуло null, клієнт від'єднався
             handleClientDisconnect();
         } catch (IOException e) {
             handleClientDisconnect();
@@ -143,24 +143,20 @@ public class ServerGame extends GameBase {
     }
 
     private void handleClientDisconnect() {
-        if (!clientSocket.isClosed()) {
-            try {
-                out.println("DISCONNECT"); // Повідомляємо клієнту про розрив
-            } catch (Exception ignored) {
-            }
-        }
-        JOptionPane.showMessageDialog(this, "Połączenie z klientem zostało utracone.",
-                "Błąd połączenia", JOptionPane.ERROR_MESSAGE);
-
-        closeConnection();
-        returnToMainMenu();
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(this, "Połączenie z klientem zostało utracone.",
+                    "Błąd połączenia", JOptionPane.ERROR_MESSAGE);
+            closeConnection(); // Закриваємо ресурси
+            returnToMainMenu(); // Повертаємося в головне меню
+        });
     }
+
 
     private void closeConnection() {
         try {
             if (serverSocket != null && !serverSocket.isClosed()) {
                 serverSocket.close();
-                System.out.println("Zamknięto połączenie z klientem.");
+                System.out.println("Serwer zamknięty.");
             }
             if (out != null) {
                 out.close();
@@ -173,15 +169,23 @@ public class ServerGame extends GameBase {
         }
     }
 
+
+
     @Override
     protected void returnToMainMenu() {
-        try {
-            if (!clientSocket.isClosed()) {
-                out.println("DISCONNECT");
-            }
-        } catch (Exception ignored) {
-        }
-        super.returnToMainMenu();
-    }
+        if (isReturningToMenu) return; // Уникаємо повторного виклику
+        isReturningToMenu = true;
 
+        int option = JOptionPane.showConfirmDialog(this, "Czy na pewno chcesz wrócić do głównego menu?",
+                "Powrót do menu", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) {
+            closeConnection(); // Закриваємо серверний сокет
+            SwingUtilities.invokeLater(() -> {
+                dispose();
+                new StartScreen(loggedInUser);
+            });
+        } else {
+            isReturningToMenu = false; // Скидаємо прапорець
+        }
+    }
 }

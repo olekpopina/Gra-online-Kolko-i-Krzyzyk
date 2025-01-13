@@ -17,7 +17,7 @@ public abstract class GameBase extends JFrame implements GameMode {
     protected final String[][] gameState = new String[3][3];
     protected BufferedImage obrazekX = ResourceLoader.loadImage("/images/x.png");
     protected BufferedImage obrazekO = ResourceLoader.loadImage("/images/o.png");
-    private boolean isReturningToMenu = false;
+    protected boolean isReturningToMenu = false;
     protected String loggedInUser = null;
     protected String playerSymbol = "X";
     private String gameMode = "local"; // Можливо значення: "local", "vs_bot", "online"
