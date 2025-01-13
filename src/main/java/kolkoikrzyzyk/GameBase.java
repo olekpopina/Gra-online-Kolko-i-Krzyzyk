@@ -6,6 +6,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public abstract class GameBase extends JFrame implements GameMode {
     protected final JButton[][] buttons = new JButton[3][3];
@@ -69,10 +70,6 @@ public abstract class GameBase extends JFrame implements GameMode {
 
     public void setLoggedInUser(String username) {
         this.loggedInUser = username;
-    }
-
-    public void setGameMode(String mode) {
-        this.gameMode = mode;
     }
 
     private void initializeButtons(JPanel panel) {
@@ -147,7 +144,7 @@ public abstract class GameBase extends JFrame implements GameMode {
     public void resetGame() {
         if (loggedInUser != null) {
             boolean win;
-            if (gameMode != "local"){
+            if (!Objects.equals(gameMode, "local")){
                 win = GameLogic.checkWin(gameState, playerSymbol);
             }
             else  {
@@ -198,12 +195,6 @@ public abstract class GameBase extends JFrame implements GameMode {
         if (winner != null || isDraw) {
             String message = isDraw ? "Remis!" : "Wygrywa gracz: " + winner;
             JOptionPane.showMessageDialog(this, message);
-
-//            if (loggedInUser != null) {
-//                boolean win = loggedInUser.equals(winner); // Перевірка, чи залогований гравець виграв
-//                DatabaseManager.updateUserStats(loggedInUser, win, gameMode);
-//            }
-
             resetGame();
         }
     }

@@ -1,11 +1,11 @@
 package kolkoikrzyzyk;
 
 public class UserStats {
-    private int gamesPlayed;
-    private int wins;
-    private int losses;
-    private int gamesVsBot;
-    private int gamesLocal;
+    private final int gamesPlayed;
+    private final int wins;
+    private final int losses;
+    private final int gamesVsBot;
+    private final int gamesLocal;
 
     public UserStats(int gamesPlayed, int wins, int losses, int gamesVsBot, int gamesLocal) {
         this.gamesPlayed = gamesPlayed;

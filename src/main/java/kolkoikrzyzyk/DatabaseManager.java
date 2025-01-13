@@ -82,27 +82,6 @@ public class DatabaseManager {
         }
     }
 
-    // Отримання статистики користувача
-    public static String getPlayerStatistics(String username) {
-        String query = "SELECT games_played, wins, losses, games_vs_bot, games_local FROM users WHERE username = ?";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return String.format("Rozegrane gry: %d | Wygrane: %d | Przegrane: %d | Przeciw botom: %d | Lokalnie: %d",
-                        rs.getInt("games_played"),
-                        rs.getInt("wins"),
-                        rs.getInt("losses"),
-                        rs.getInt("games_vs_bot"),
-                        rs.getInt("games_local"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Nie udało się pobrać statystyk", e);
-        }
-        return "Brak danych";
-    }
-
     public static List<String> getTopPlayers() {
         String query = "SELECT username, wins, games_played, games_vs_bot " +
                 "FROM users ORDER BY wins DESC LIMIT 10";

@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.List;
 
 public class StartScreen extends JFrame {
-    private String loggedInUser; // Збереження імені залогіненого користувача
+    private final String loggedInUser; // Збереження імені залогіненого користувача
 
     public StartScreen(String username) {
         this.loggedInUser = username; // Ім'я залогіненого користувача
