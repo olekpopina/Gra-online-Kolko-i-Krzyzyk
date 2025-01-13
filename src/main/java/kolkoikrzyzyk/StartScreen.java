@@ -44,11 +44,20 @@ public class StartScreen extends JFrame {
     }
 
     private JPanel createUserPanel() {
-        JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        userPanel.setOpaque(false);
+        JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setColor(new Color(0, 0, 0, 150)); // Чорний колір з 150 рівнем прозорості (0-255)
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                g2d.dispose();
+            }
+        };
+        userPanel.setOpaque(false); // Залишаємо прозорість панелі
         JLabel userLabel = new JLabel("Zalogowano jako: " + (loggedInUser != null ? loggedInUser : "Gość"));
-        userLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        userLabel.setForeground(Color.BLUE);
+        userLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        userLabel.setForeground(Color.YELLOW);
         userPanel.add(userLabel);
         return userPanel;
     }
@@ -59,8 +68,8 @@ public class StartScreen extends JFrame {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         JLabel titleLabel = new JLabel("Najlepsi gracze:");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        titleLabel.setForeground(Color.YELLOW);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
+        titleLabel.setForeground(Color.WHITE);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(titleLabel);
 
@@ -94,7 +103,7 @@ public class StartScreen extends JFrame {
             game.updateWindowTitle();
         });
 
-        JButton vsComputerButton = createStyledButton("Gra przeciw komputerowi");
+        JButton vsComputerButton = createStyledButton("Gra przeciwko komputerowi");
         gbc.gridy = 1;
         panel.add(vsComputerButton, gbc);
         vsComputerButton.addActionListener(e -> {

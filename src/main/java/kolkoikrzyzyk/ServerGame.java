@@ -114,7 +114,7 @@ public class ServerGame extends GameBase {
         isMyTurn = false;
 
         out.println(row + "," + col + ",X"); // Надсилаємо хід клієнту
-        checkAndSaveGameResult();
+        checkGameStatus();
     }
 
     private void listenForMoves() {

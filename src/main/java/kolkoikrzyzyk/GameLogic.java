@@ -1,54 +1,41 @@
 package kolkoikrzyzyk;
 
 public class GameLogic {
-    // Перевірка загальної перемоги (без прив'язки до гравця)
-    public static boolean checkWin(String[][] gameState) {
-        return checkRowsAndColumns(gameState, null) || checkDiagonals(gameState, null);
-    }
 
-    // Перевірка перемоги для конкретного гравця
-    public static boolean checkWin(String[][] gameState, String playerSymbol) {
-        return checkRowsAndColumns(gameState, playerSymbol) || checkDiagonals(gameState, playerSymbol);
-    }
+    // Перевірка на перемогу або визначення переможця
+    public static String getWinner(String[][] gameState) {
+        String winner;
 
-    // Перевіряє рядки та стовпці
-    private static boolean checkRowsAndColumns(String[][] gameState, String playerSymbol) {
+        // Перевірка рядків
         for (int i = 0; i < 3; i++) {
-            // Перевірка рядка
-            if (checkLine(gameState[i][0], gameState[i][1], gameState[i][2], playerSymbol)) {
-                return true;
-            }
-            // Перевірка стовпця
-            if (checkLine(gameState[0][i], gameState[1][i], gameState[2][i], playerSymbol)) {
-                return true;
-            }
+            winner = checkLine(gameState[i][0], gameState[i][1], gameState[i][2]);
+            if (winner != null) return winner;
         }
-        return false;
+
+        // Перевірка стовпців
+        for (int i = 0; i < 3; i++) {
+            winner = checkLine(gameState[0][i], gameState[1][i], gameState[2][i]);
+            if (winner != null) return winner;
+        }
+
+        // Перевірка діагоналей
+        winner = checkLine(gameState[0][0], gameState[1][1], gameState[2][2]);
+        if (winner != null) return winner;
+
+        winner = checkLine(gameState[0][2], gameState[1][1], gameState[2][0]);
+        return winner; // Може бути null, якщо переможця немає
     }
 
-    // Перевіряє діагоналі
-    private static boolean checkDiagonals(String[][] gameState, String playerSymbol) {
-        // Головна діагональ
-        if (checkLine(gameState[0][0], gameState[1][1], gameState[2][2], playerSymbol)) {
-            return true;
+    // Перевірка, чи лінія має однакові символи
+    private static String checkLine(String a, String b, String c) {
+        if (a != null && a.equals(b) && a.equals(c)) {
+            return a; // Повертаємо символ переможця ("X" або "O")
         }
-        // Побічна діагональ
-        if (checkLine(gameState[0][2], gameState[1][1], gameState[2][0], playerSymbol)) {
-            return true;
-        }
-        return false;
+        return null; // Немає переможця
     }
 
-    // Універсальна перевірка лінії
-    private static boolean checkLine(String a, String b, String c, String playerSymbol) {
-        if (playerSymbol == null) {
-            // Перевірка загальної перемоги
-            return a != null && a.equals(b) && b.equals(c);
-        } else {
-            // Перевірка для конкретного гравця
-            return a != null && a.equals(playerSymbol) &&
-                    b != null && b.equals(playerSymbol) &&
-                    c != null && c.equals(playerSymbol);
-        }
+    // Перевіряє, чи переміг конкретний гравець
+    public static boolean isPlayerWinner(String[][] gameState, String playerSymbol) {
+        return playerSymbol.equals(getWinner(gameState));
     }
 }

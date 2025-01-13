@@ -35,7 +35,7 @@ public class ClientGame extends GameBase {
         isMyTurn = false;
 
         out.println(row + "," + col + ",O"); // Відправляємо хід серверу
-        checkAndSaveGameResult();
+        checkGameStatus();
     }
 
     private void listenForMoves() {

@@ -143,21 +143,16 @@ public abstract class GameBase extends JFrame implements GameMode {
     @Override
     public void resetGame() {
         if (loggedInUser != null) {
-            boolean win;
-            if (!Objects.equals(gameMode, "local")){
-                win = GameLogic.checkWin(gameState, playerSymbol);
-            }
-            else  {
-                win = GameLogic.checkWin(gameState);
-            }
+            String winner = GameLogic.getWinner(gameState);
+            boolean isDraw = isBoardFull() && winner == null;
 
-            boolean draw = isBoardFull() && !win; // Перевірка на нічию
-
-            if (!draw) { // Записуємо тільки якщо це не нічия
+            if (!isDraw) { // Тільки якщо це не нічия
+                boolean win = Objects.equals(winner, playerSymbol); // Перевірка, чи переміг поточний гравець
                 DatabaseManager.updateUserStats(loggedInUser, win, gameMode);
             }
         }
 
+        // Очищення гри
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 buttons[i][j].setText("");
@@ -174,52 +169,21 @@ public abstract class GameBase extends JFrame implements GameMode {
     }
 
     protected boolean checkGameStatus() {
-        String winner = getWinner(); // Отримуємо символ переможця
+        String winner = GameLogic.getWinner(gameState);
+        boolean isDraw = isBoardFull() && winner == null;
 
         if (winner != null) { // Якщо є переможець
             JOptionPane.showMessageDialog(this, "Wygrywa gracz: " + winner + "!", "Wynik gry", JOptionPane.INFORMATION_MESSAGE);
-            resetGame();
-            return true;
-        } else if (isBoardFull()) { // Нічия
+        } else if (isDraw) { // Якщо нічия
             JOptionPane.showMessageDialog(this, "Remis!", "Wynik gry", JOptionPane.INFORMATION_MESSAGE);
-            resetGame();
-            return true;
+        } else {
+            return false; // Гра ще не закінчена
         }
-        return false;
+
+        resetGame(); // Завершення гри і запис результатів
+        return true;
     }
 
-    protected void checkAndSaveGameResult() {
-        String winner = getWinner(); // Локальне визначення переможця
-        boolean isDraw = isBoardFull() && winner == null;
-
-        if (winner != null || isDraw) {
-            String message = isDraw ? "Remis!" : "Wygrywa gracz: " + winner;
-            JOptionPane.showMessageDialog(this, message);
-            resetGame();
-        }
-    }
-
-
-    protected String getWinner() {
-        for (int i = 0; i < 3; i++) {
-            // Перевірка рядків
-            if (gameState[i][0] != null && gameState[i][0].equals(gameState[i][1]) && gameState[i][0].equals(gameState[i][2])) {
-                return gameState[i][0];
-            }
-            // Перевірка стовпців
-            if (gameState[0][i] != null && gameState[0][i].equals(gameState[1][i]) && gameState[0][i].equals(gameState[2][i])) {
-                return gameState[0][i];
-            }
-        }
-        // Перевірка діагоналей
-        if (gameState[0][0] != null && gameState[0][0].equals(gameState[1][1]) && gameState[0][0].equals(gameState[2][2])) {
-            return gameState[0][0];
-        }
-        if (gameState[0][2] != null && gameState[0][2].equals(gameState[1][1]) && gameState[0][2].equals(gameState[2][0])) {
-            return gameState[0][2];
-        }
-        return null; // Немає переможця
-    }
 
     private boolean isBoardFull() {
         for (String[] row : gameState) {
