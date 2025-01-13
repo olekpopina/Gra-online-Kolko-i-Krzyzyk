@@ -215,9 +215,19 @@ public class DatabaseManager {
         }
         return null;
     }
-
+    /**
+     * @brief Usuwa użytkownika z bazy danych.
+     *
+     * @param username Nazwa użytkownika, który ma zostać usunięty.
+     * @return true, jeśli użytkownik został pomyślnie usunięty, false w przypadku błędu lub gdy użytkownik nie istnieje.
+     *
+     * @details Metoda korzysta z zapytania SQL, aby usunąć użytkownika z tabeli `users` na podstawie podanej nazwy użytkownika.
+     *          Jeśli operacja zakończy się powodzeniem i co najmniej jeden wiersz zostanie usunięty, metoda zwraca `true`.
+     *          W przeciwnym razie zwraca `false`.
+     *          W przypadku wystąpienia wyjątku SQL, błąd jest drukowany w konsoli.
+     */
     public static boolean deleteUser(String username) {
-        String query = "DELETE FROM users WHERE username = ?";
+        String query = "DELETE FROM users WHERE username = ?"; //Usunnięcia użytkownika
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, username);

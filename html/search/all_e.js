@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['testclientgameconnection_0',['testClientGameConnection',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a422bb4ae0f65a47773decb5f07fd4882',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testcomputermakesmove_1',['testComputerMakesMove',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a03cc932860e5202b7191fbfe68d5f7bc',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testdatabaseuserregistration_2',['testDatabaseUserRegistration',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a27ce7e23c29e911fa1c0cdecd2ec8ead',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testdatabaseuserstatsinitialization_3',['testDatabaseUserStatsInitialization',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#aad1233ecccab44d7a9191fddfda3003a',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testdrawcondition_4',['testDrawCondition',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#af26bc6ac01178ff6085fae0c26545536',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testgetwinnerforcolumns_5',['testGetWinnerForColumns',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#aa34e914279af1c6f344bee73e6b29928',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testgetwinnerfordiagonals_6',['testGetWinnerForDiagonals',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#ad9e585f8d86076632f9d5a217adf77f4',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testgetwinnerforrows_7',['testGetWinnerForRows',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a5d0d2257413157269b36ecefb3b735a6',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testlocalgamereset_8',['testLocalGameReset',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a7016919e0dad1fa34f89d117cf9836c0',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testnodrawcondition_9',['testNoDrawCondition',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a12d4fcc8f9bc5743bf679900a690e0da',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testnogamesplayedwinratio_10',['testNoGamesPlayedWinRatio',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a2503db65e0bb5d11d4adfae45bf32c5c',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testnowinnerdraw_11',['testNoWinnerDraw',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a21216730da700ac6af63a518606c1edb',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testnowinneremptyboard_12',['testNoWinnerEmptyBoard',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a027e4e2d22c58ea7698d6ea153f48061',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testservergameconnection_13',['testServerGameConnection',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a74e29616b4356018f3d6f0e532d868ca',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testupdateuserstats_14',['testUpdateUserStats',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a753ac8770acc22dd91e1d251209f25d1',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testvscomputergamemove_15',['testVsComputerGameMove',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#ae84595cc3393fa0b7f104ac062a2b7ea',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['testwinratiocalculation_16',['testWinRatioCalculation',['../classkolkoikrzyzyk_1_1_game_logic_tests.html#a8c666fe3763c30eb1f3a2d4a49556933',1,'kolkoikrzyzyk::GameLogicTests']]],
+  ['turagraczax_17',['turaGraczaX',['../classkolkoikrzyzyk_1_1_local_game.html#ad917ae8a5a2114d0f7bbcd0fdaf9e690',1,'kolkoikrzyzyk::LocalGame']]]
+];
