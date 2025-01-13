@@ -1,3 +1,10 @@
+/**
+ * @file GameBase.java
+ * @brief Abstrakcyjna klasa bazowa dla gry Kółko i Krzyżyk.
+ *
+ * Klasa definiuje podstawowe mechanizmy gry, takie jak interfejs użytkownika, zarządzanie stanem gry,
+ * oraz obsługę różnych trybów gry.
+ */
 package kolkoikrzyzyk;
 
 import javax.swing.*;
@@ -8,24 +15,57 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
+/**
+ * @class GameBase
+ * @brief Abstrakcyjna klasa bazowa implementująca wspólne funkcje gry Kółko i Krzyżyk.
+ */
 public abstract class GameBase extends JFrame implements GameMode {
+    /**
+     * @brief Przyciski reprezentujące planszę gry 3x3.
+     */
     protected final JButton[][] buttons = new JButton[3][3];
+    /**
+     * @brief Tablica przechowująca aktualny stan gry.
+     * Wartości: "X", "O" lub null (dla pustej komórki).
+     */
     protected final String[][] gameState = new String[3][3];
+    /**
+     * @brief Obrazek symbolu X.
+     */
     protected BufferedImage obrazekX = ResourceLoader.loadImage("/images/x.png");
+    /**
+     * @brief Obrazek symbolu O.
+     */
     protected BufferedImage obrazekO = ResourceLoader.loadImage("/images/o.png");
+    /**
+     * @brief Flaga określająca, czy gracz wraca do menu.
+     */
     protected boolean isReturningToMenu = false;
+    /**
+     * @brief Zalogowany użytkownik.
+     */
     protected String loggedInUser = null;
+    /**
+     * @brief Symbol gracza (domyślnie "X").
+     */
     protected String playerSymbol = "X";
+    /**
+     * @brief Tryb gry: "local", "vs_bot" lub "online".
+     */
     private String gameMode = "local"; // Можливо значення: "local", "vs_bot", "online"
-
+    /**
+     * @brief Konstruktor tworzący okno gry z domyślnym trybem lokalnym.
+     * @param title Tytuł okna.
+     */
     public GameBase(String title) {
+        // Inicjalizacja okna
         setTitle(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Початковий розмір вікна
+        // Początkowy rozmiar okna
         int windowSize = 600;
         setSize(windowSize, windowSize);
-        setMinimumSize(new Dimension(400, 400)); // Мінімальний розмір вікна
+        setMinimumSize(new Dimension(400, 400));
 
         BackgroundPanel backgroundPanel = new BackgroundPanel("/images/tlo.png");
         backgroundPanel.setLayout(new GridBagLayout());
@@ -41,20 +81,17 @@ public abstract class GameBase extends JFrame implements GameMode {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(20, 20, 20, 20); // Відступи навколо сітки
+        gbc.insets = new Insets(20, 20, 20, 20);
         backgroundPanel.add(gamePanel, gbc);
 
-        // Встановлення стартового розміру сітки кнопок
-        int gridSize = (int) (windowSize * 0.65); // 65% від розміру вікна
+
+        int gridSize = (int) (windowSize * 0.65); // Rozmiar planszy
         gamePanel.setPreferredSize(new Dimension(gridSize, gridSize));
         updateButtonSizes(gridSize / 3);
-
-
         addEscKeyListener();
 
         setVisible(true);
 
-        // Додаємо слухача для динамічної зміни розміру
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -63,16 +100,28 @@ public abstract class GameBase extends JFrame implements GameMode {
         });
     }
 
+    /**
+     * @brief Konstruktor tworzący okno gry z określonym trybem i symbolem gracza.
+     * @param title Tytuł okna.
+     * @param gameMode Wybrany tryb gry.
+     * @param playerSymbol Symbol przypisany do gracza.
+     */
     public GameBase(String title, String gameMode, String playerSymbol) {
         this(title);
         this.gameMode = gameMode;
         this.playerSymbol = playerSymbol;
     }
-
+    /**
+     * @brief Ustawia zalogowanego użytkownika.
+     * @param username Nazwa użytkownika.
+     */
     public void setLoggedInUser(String username) {
         this.loggedInUser = username;
     }
-
+    /**
+     * @brief Inicjalizuje przyciski na planszy gry.
+     * @param panel Panel, do którego dodawane są przyciski.
+     */
     private void initializeButtons(JPanel panel) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -81,11 +130,10 @@ public abstract class GameBase extends JFrame implements GameMode {
                 buttons[i][j].setOpaque(false);
                 buttons[i][j].setContentAreaFilled(false);
                 buttons[i][j].setBorderPainted(false);
-                buttons[i][j].setEnabled(true); // Всі кнопки мають бути активними
-                buttons[i][j].setText(""); // Очищаємо текст кнопки
-                buttons[i][j].setIcon(null); // Без значка
-                gameState[i][j] = null; // Ігровий стан клітинки пустий
-
+                buttons[i][j].setEnabled(true);
+                buttons[i][j].setText("");
+                buttons[i][j].setIcon(null);
+                gameState[i][j] = null;
                 int finalI = i;
                 int finalJ = j;
                 buttons[i][j].addActionListener(e -> makeMove(finalI, finalJ));
@@ -94,11 +142,14 @@ public abstract class GameBase extends JFrame implements GameMode {
         }
     }
 
+    /**
+     * @brief Ustawia rozmiar planszy gry na podstawie rozmiaru okna.
+     * @param gamePanel Panel zawierający planszę gry.
+     */
     private void setGridSize(JPanel gamePanel) {
         int windowWidth = getWidth();
         int windowHeight = getHeight();
 
-        // Обмежуємо розмір сітки (50% від поточного розміру вікна)
         int gridSize = (int) (Math.min(windowWidth, windowHeight) * 0.65);
         gamePanel.setPreferredSize(new Dimension(gridSize, gridSize));
 
@@ -107,53 +158,67 @@ public abstract class GameBase extends JFrame implements GameMode {
         repaint();
     }
 
-
+    /**
+     * @brief Aktualizuje rozmiar przycisków na planszy.
+     * @param buttonSize Nowy rozmiar przycisków.
+     */
     private void updateButtonSizes(int buttonSize) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 buttons[i][j].setPreferredSize(new Dimension(buttonSize, buttonSize));
                 String player = gameState[i][j];
                 if (player != null) {
-                    buttons[i][j].setIcon(getPlayerIcon(player, buttonSize)); // Оновлюємо іконку
+                    buttons[i][j].setIcon(getPlayerIcon(player, buttonSize));
                 }
             }
         }
     }
 
+    /**
+     * @brief Aktualizuje tytuł okna, dodając nazwę zalogowanego użytkownika.
+     */
     public void updateWindowTitle() {
         if (loggedInUser != null) {
             setTitle(getTitle() + " - Zalogowano jako: " + loggedInUser);
         }
     }
-
-
-
+    /**
+     * @brief Pobiera ikonę odpowiadającą symbolowi gracza.
+     * @param player Symbol gracza ("X" lub "O").
+     * @param buttonSize Rozmiar przycisku, do którego ikona ma być dopasowana.
+     * @return Ikona gracza jako obiekt ImageIcon.
+     */
     protected ImageIcon getPlayerIcon(String player, int buttonSize) {
         if (player == null || player.isEmpty()) return null;
 
         BufferedImage image = "X".equals(player) ? obrazekX : obrazekO;
         if (image == null) return null;
 
-        int scaledSize = (int) (buttonSize * 0.8); // 80% від розміру кнопки
+        int scaledSize = (int) (buttonSize * 0.8);
         Image scaledImage = image.getScaledInstance(scaledSize, scaledSize, Image.SCALE_SMOOTH);
         return new ImageIcon(scaledImage);
     }
 
-
-
+    /**
+     * @brief Resetuje grę, czyszcząc planszę i stan gry.
+     *
+     * Jeśli użytkownik jest zalogowany, aktualizuje statystyki w bazie danych
+     * w oparciu o wynik ostatniej gry.
+     *
+     * @note Metoda wykonuje reset gry, przywracając wszystkie pola do stanu początkowego.
+     */
     @Override
     public void resetGame() {
         if (loggedInUser != null) {
             String winner = GameLogic.getWinner(gameState);
             boolean isDraw = isBoardFull() && winner == null;
 
-            if (!isDraw) { // Тільки якщо це не нічия
-                boolean win = Objects.equals(winner, playerSymbol); // Перевірка, чи переміг поточний гравець
+            if (!isDraw) {
+                boolean win = Objects.equals(winner, playerSymbol);
                 DatabaseManager.updateUserStats(loggedInUser, win, gameMode);
             }
         }
 
-        // Очищення гри
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 buttons[i][j].setText("");
@@ -169,23 +234,32 @@ public abstract class GameBase extends JFrame implements GameMode {
         });
     }
 
+    /**
+     * @brief Sprawdza, czy gra zakończyła się wygraną lub remisem.
+     *
+     * @return true, jeśli gra się zakończyła (wygrana lub remis), false w przeciwnym razie.
+     *
+     * @details Wyświetla komunikaty dla gracza o wyniku gry. Jeśli gra się zakończyła, resetuje planszę.
+     */
     protected boolean checkGameStatus() {
         String winner = GameLogic.getWinner(gameState);
         boolean isDraw = isBoardFull() && winner == null;
 
-        if (winner != null) { // Якщо є переможець
+        if (winner != null) {
             JOptionPane.showMessageDialog(this, "Wygrywa gracz: " + winner + "!", "Wynik gry", JOptionPane.INFORMATION_MESSAGE);
-        } else if (isDraw) { // Якщо нічия
+        } else if (isDraw) {
             JOptionPane.showMessageDialog(this, "Remis!", "Wynik gry", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            return false; // Гра ще не закінчена
+            return false;
         }
-
-        resetGame(); // Завершення гри і запис результатів
+        resetGame();
         return true;
     }
-
-
+    /**
+     * @brief Sprawdza, czy wszystkie pola na planszy są zajęte.
+     *
+     * @return true, jeśli plansza jest pełna, false w przeciwnym razie.
+     */
     private boolean isBoardFull() {
         for (String[] row : gameState) {
             for (String cell : row) {
@@ -194,11 +268,20 @@ public abstract class GameBase extends JFrame implements GameMode {
         }
         return true;
     }
-
+    /**
+     * @brief Wyświetla komunikat o błędzie w oknie dialogowym.
+     *
+     * @param message Treść komunikatu błędu.
+     */
     protected void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Błąd", JOptionPane.ERROR_MESSAGE);
     }
-
+    /**
+     * @brief Wyświetla aktualny stan planszy w konsoli.
+     *
+     * @details Metoda drukuje stan gry w formacie tekstowym, gdzie puste pola
+     * są reprezentowane kropkami, a symbole graczy jako "X" i "O".
+     */
     void printGameState() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -207,9 +290,14 @@ public abstract class GameBase extends JFrame implements GameMode {
             System.out.println();
         }
     }
-
+    /**
+     * @brief Powraca do głównego menu gry po potwierdzeniu przez użytkownika.
+     *
+     * @details Wyświetla okno dialogowe z pytaniem o potwierdzenie. Jeśli użytkownik zaakceptuje,
+     * zamyka aktualne okno gry i otwiera ekran startowy. Jeśli użytkownik odmówi, pozostaje w grze.
+     */
     protected void returnToMainMenu() {
-        if (isReturningToMenu) return; // Уникаємо повторного виклику
+        if (isReturningToMenu) return;
         isReturningToMenu = true;
 
         int option = JOptionPane.showConfirmDialog(this, "Czy na pewno chcesz wrócić do głównego menu?",
@@ -221,8 +309,12 @@ public abstract class GameBase extends JFrame implements GameMode {
             isReturningToMenu = false;
         }
     }
-
-
+    /**
+     * @brief Dodaje obsługę klawisza ESC do powrotu do menu głównego.
+     *
+     * @details Przypisuje akcję powrotu do głównego menu do klawisza ESCAPE,
+     * która jest wykonywana w kontekście aktywnego okna gry.
+     */
     private void addEscKeyListener() {
         JRootPane rootPane = this.getRootPane();
 
@@ -237,5 +329,4 @@ public abstract class GameBase extends JFrame implements GameMode {
             }
         });
     }
-
 }
