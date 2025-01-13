@@ -121,6 +121,7 @@ public class ServerGame extends GameBase {
         try {
             String line;
             while ((line = in.readLine()) != null) {
+                // Обробка отриманого ходу
                 String[] parts = line.split(",");
                 int row = Integer.parseInt(parts[0]);
                 int col = Integer.parseInt(parts[1]);
@@ -130,11 +131,57 @@ public class ServerGame extends GameBase {
                 buttons[row][col].setIcon(getPlayerIcon(player, buttons[row][col].getWidth()));
                 buttons[row][col].setEnabled(false);
 
-                isMyTurn = true; // Після отримання ходу сервер знову може ходити
+                isMyTurn = true; // Сервер може зробити наступний хід
                 checkGameStatus();
             }
+
+            // Якщо цикл завершився (readLine() повернув null)
+            handleClientDisconnect();
         } catch (IOException e) {
-            showError("Błąd sieci: " + e.getMessage());
+            handleClientDisconnect();
         }
     }
+
+    private void handleClientDisconnect() {
+        if (!clientSocket.isClosed()) {
+            try {
+                out.println("DISCONNECT"); // Повідомляємо клієнту про розрив
+            } catch (Exception ignored) {
+            }
+        }
+        JOptionPane.showMessageDialog(this, "Połączenie z klientem zostało utracone.",
+                "Błąd połączenia", JOptionPane.ERROR_MESSAGE);
+
+        closeConnection();
+        returnToMainMenu();
+    }
+
+    private void closeConnection() {
+        try {
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+                System.out.println("Zamknięto połączenie z klientem.");
+            }
+            if (out != null) {
+                out.close();
+            }
+            if (in != null) {
+                in.close();
+            }
+        } catch (IOException e) {
+            System.err.println("Błąd podczas zamykania połączenia: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void returnToMainMenu() {
+        try {
+            if (!clientSocket.isClosed()) {
+                out.println("DISCONNECT");
+            }
+        } catch (Exception ignored) {
+        }
+        super.returnToMainMenu();
+    }
+
 }

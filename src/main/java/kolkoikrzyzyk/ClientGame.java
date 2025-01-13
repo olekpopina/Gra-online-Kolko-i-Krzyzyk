@@ -1,13 +1,13 @@
 package kolkoikrzyzyk;
-
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 
 public class ClientGame extends GameBase {
+    private boolean isMyTurn = false; // Клієнт починає другим
+    private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private boolean isMyTurn = false; // Клієнт починає другим
-
     public ClientGame(String serverIp) {
         super("Gra jako klient ( O )", "online", "O");
         connectToServer(serverIp);
@@ -15,13 +15,14 @@ public class ClientGame extends GameBase {
 
     private void connectToServer(String serverIp) {
         try {
-            Socket socket = new Socket(serverIp, 5000);
+            socket = new Socket(serverIp, 5000);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             new Thread(this::listenForMoves).start();
         } catch (IOException e) {
             showError("Nie można połączyć się z serwerem: " + e.getMessage());
+            closeConnection(); // Закриваємо, якщо виникла помилка
         }
     }
 
@@ -42,6 +43,12 @@ public class ClientGame extends GameBase {
         try {
             String line;
             while ((line = in.readLine()) != null) {
+                if ("DISCONNECT".equals(line)) { // Сервер повідомляє про розрив
+                    handleServerDisconnect();
+                    return;
+                }
+
+                // Обробка ходу сервера
                 String[] parts = line.split(",");
                 int row = Integer.parseInt(parts[0]);
                 int col = Integer.parseInt(parts[1]);
@@ -51,13 +58,57 @@ public class ClientGame extends GameBase {
                 buttons[row][col].setIcon(getPlayerIcon(player, buttons[row][col].getWidth()));
                 buttons[row][col].setEnabled(false);
 
-                isMyTurn = true; // Після отримання ходу, клієнт може ходити
+                isMyTurn = true;
                 checkGameStatus();
             }
+
+            // Якщо readLine повернуло null
+            handleServerDisconnect();
         } catch (IOException e) {
-            showError("Błąd sieci: " + e.getMessage());
+            handleServerDisconnect();
         }
     }
+
+    private void handleServerDisconnect() {
+        JOptionPane.showMessageDialog(this, "Połączenie z serwerem zostało utracone.",
+                "Błąd połączenia", JOptionPane.ERROR_MESSAGE);
+
+        closeConnection();
+        returnToMainMenu();
+    }
+
+    @Override
+    protected void returnToMainMenu() {
+        int option = JOptionPane.showConfirmDialog(this, "Czy na pewno chcesz wrócić do głównego menu?",
+                "Powrót do menu", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.YES_OPTION) {
+            try {
+                out.println("DISCONNECT"); // Повідомляємо сервер про розрив
+            } catch (Exception ignored) {
+            }
+            closeConnection();
+            dispose();
+            new StartScreen(loggedInUser);
+        }
+    }
+
+    private void closeConnection() {
+        try {
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+                System.out.println("Zamknięto połączenie.");
+            }
+            if (out != null) {
+                out.close();
+            }
+            if (in != null) {
+                in.close();
+            }
+        } catch (IOException e) {
+            System.err.println("Błąd podczas zamykania połączenia: " + e.getMessage());
+        }
+    }
+
 
 
 }

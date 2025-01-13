@@ -6,6 +6,10 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Objects;
 
 public abstract class GameBase extends JFrame implements GameMode {
@@ -13,7 +17,8 @@ public abstract class GameBase extends JFrame implements GameMode {
     protected final String[][] gameState = new String[3][3];
     protected BufferedImage obrazekX = ResourceLoader.loadImage("/images/x.png");
     protected BufferedImage obrazekO = ResourceLoader.loadImage("/images/o.png");
-    private String loggedInUser = null;
+    private boolean isReturningToMenu = false;
+    protected String loggedInUser = null;
     protected String playerSymbol = "X";
     private String gameMode = "local"; // Можливо значення: "local", "vs_bot", "online"
 
@@ -208,13 +213,19 @@ public abstract class GameBase extends JFrame implements GameMode {
     }
 
     protected void returnToMainMenu() {
+        if (isReturningToMenu) return; // Уникаємо повторного виклику
+        isReturningToMenu = true;
+
         int option = JOptionPane.showConfirmDialog(this, "Czy na pewno chcesz wrócić do głównego menu?",
                 "Powrót do menu", JOptionPane.YES_NO_OPTION);
         if (option == JOptionPane.YES_OPTION) {
-            dispose(); // Закриваємо поточне вікно
-            new StartScreen(loggedInUser); // Відкриваємо головне меню
+            dispose();
+            new StartScreen(loggedInUser);
+        } else {
+            isReturningToMenu = false;
         }
     }
+
 
     private void addEscKeyListener() {
         JRootPane rootPane = this.getRootPane();

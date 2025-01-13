@@ -33,9 +33,4 @@ public class GameLogic {
         }
         return null; // Немає переможця
     }
-
-    // Перевіряє, чи переміг конкретний гравець
-    public static boolean isPlayerWinner(String[][] gameState, String playerSymbol) {
-        return playerSymbol.equals(getWinner(gameState));
-    }
 }
