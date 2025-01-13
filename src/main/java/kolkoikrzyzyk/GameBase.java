@@ -6,10 +6,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.Objects;
 
 public abstract class GameBase extends JFrame implements GameMode {
