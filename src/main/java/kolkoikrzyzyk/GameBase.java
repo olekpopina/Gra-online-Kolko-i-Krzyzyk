@@ -277,20 +277,6 @@ public abstract class GameBase extends JFrame implements GameMode {
         JOptionPane.showMessageDialog(this, message, "Błąd", JOptionPane.ERROR_MESSAGE);
     }
     /**
-     * @brief Wyświetla aktualny stan planszy w konsoli.
-     *
-     * @details Metoda drukuje stan gry w formacie tekstowym, gdzie puste pola
-     * są reprezentowane kropkami, a symbole graczy jako "X" i "O".
-     */
-    void printGameState() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(gameState[i][j] == null ? "." : gameState[i][j]);
-            }
-            System.out.println();
-        }
-    }
-    /**
      * @brief Powraca do głównego menu gry po potwierdzeniu przez użytkownika.
      *
      * @details Wyświetla okno dialogowe z pytaniem o potwierdzenie. Jeśli użytkownik zaakceptuje,
